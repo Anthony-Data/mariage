@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthony & Yona — 5 Juillet 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --sage: #7a8c6e;
+    --sage-light: #b5c4a5;
+    --sage-pale: #e8ede3;
+    --terracotta: #b8785a;
+    --cream: #f5f0e8;
+    --brown: #5a4534;
+    --text: #3a2e24;
+    --muted: #8a7a6a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 1.2rem 2rem;
+    background: rgba(245,240,232,0.88);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(122,140,110,0.15);
+  }
+  nav a {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--brown); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    background: var(--cream);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 15% 20%, rgba(122,140,110,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 85% 75%, rgba(184,120,90,0.08) 0%, transparent 70%);
+  }
+
+  .botanical { position: absolute; pointer-events: none; }
+  .botanical-tl { top: -20px; left: -20px; width: 260px; opacity: 0.55; transform: rotate(-10deg); }
+  .botanical-br { bottom: -20px; right: -20px; width: 240px; opacity: 0.5; transform: rotate(170deg) scaleX(-1); }
+  .botanical-tr { top: 10px; right: -10px; width: 180px; opacity: 0.35; transform: rotate(20deg) scaleX(-1); }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 6.5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.05;
+    color: var(--brown);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-names span { color: var(--terracotta); font-style: normal; }
+
+  .divider-leaf {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+  .divider-leaf::before, .divider-leaf::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: var(--sage-light);
+  }
+
+  .hero-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--sage);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.4s forwards;
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 30px;
+    background: var(--sage-light);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ── SECTIONS COMMUNES ── */
+  .section {
+    padding: 6rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+  .section-alt { background: white; }
+
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--brown);
+    text-align: center;
+    line-height: 1.2;
+    margin-top: -1.5rem;
+  }
+
+  /* ── COUNTDOWN ── */
+  .countdown-wrap {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .count-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1px solid rgba(122,140,110,0.25);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    min-width: 90px;
+    position: relative;
+    overflow: hidden;
+  }
+  .count-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sage-light), var(--terracotta));
+    opacity: 0.5;
+  }
+
+  .count-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--brown);
+    line-height: 1;
+  }
+
+  .count-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  /* ── LIEU ── */
+  .lieu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .lieu-card {
+    background: var(--cream);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .lieu-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--sage-pale);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lieu-icon svg { width: 20px; height: 20px; stroke: var(--sage); fill: none; stroke-width: 1.5; }
+
+  .lieu-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--brown);
+  }
+
+  .lieu-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .lieu-card address {
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--sage);
+    border-top: 1px solid rgba(122,140,110,0.2);
+    padding-top: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+    transition: opacity 0.2s;
+  }
+  .map-link:hover { opacity: 0.7; }
+  .map-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ── PROGRAMME ── */
+  .timeline {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--sage-light);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 2.5rem 2rem;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -1.95rem;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--sage);
+    transition: background 0.3s;
+  }
+  .timeline-item:hover .timeline-dot { background: var(--sage); }
+
+  .timeline-time {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.3rem;
+  }
+
+  .timeline-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--brown);
+    margin-bottom: 0.3rem;
+  }
+
+  .timeline-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── RSVP ── */
+  .rsvp-section {
+    background: var(--sage-pale);
+    padding: 6rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .rsvp-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(122,140,110,0.1) 0%, transparent 70%);
+  }
+
+  .rsvp-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .rsvp-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  .rsvp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--brown);
+    line-height: 1.2;
+  }
+
+  .rsvp-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .rsvp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 2.5rem;
+    background: var(--brown);
+    color: var(--cream);
+    text-decoration: none;
+    border-radius: 100px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .rsvp-btn:hover { background: var(--terracotta); transform: translateY(-2px); }
+  .rsvp-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(122,140,110,0.2);
+  }
+  footer .footer-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--brown);
+  }
+  footer p { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav { gap: 1.2rem; }
+    .lieu-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#accueil">Accueil</a>
+  <a href="#decompte">Décompte</a>
+  <a href="#lieu">Lieu</a>
+  <a href="#programme">Programme</a>
+  <a href="#rsvp">RSVP</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+
+  <svg class="botanical botanical-tl" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#7a8c6e" stroke-width="1.2">
+      <path d="M60,280 Q80,200 120,150 Q150,110 200,80"/>
+      <path d="M120,150 Q90,120 60,130"/>
+      <path d="M120,150 Q130,110 160,100"/>
+      <path d="M150,200 Q120,180 100,190"/>
+      <path d="M150,200 Q155,165 180,155"/>
+      <path d="M180,250 Q160,230 140,240"/>
+      <path d="M180,250 Q185,215 210,205"/>
+      <ellipse cx="55" cy="128" rx="18" ry="10" transform="rotate(-30 55 128)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
+      <ellipse cx="162" cy="98" rx="16" ry="9" transform="rotate(10 162 98)" fill="#b5c4a5" stroke="none" opacity="0.5"/>
+      <ellipse cx="96" cy="188" rx="15" ry="8" transform="rotate(-20 96 188)" fill="#b5c4a5" stroke="none" opacity="0.5"/>
+      <ellipse cx="137" cy="238" rx="14" ry="8" transform="rotate(-40 137 238)" fill="#b5c4a5" stroke="none" opacity="0.45"/>
+      <circle cx="200" cy="78" r="4" fill="#b8785a" opacity="0.7" stroke="none"/>
+      <circle cx="202" cy="78" r="7" fill="none" stroke="#b8785a" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="220" cy="65" r="3" fill="#b8785a" opacity="0.5" stroke="none"/>
+    </g>
+  </svg>
+
+  <svg class="botanical botanical-br" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#7a8c6e" stroke-width="1.2">
+      <path d="M60,280 Q80,200 120,150 Q150,110 200,80"/>
+      <path d="M120,150 Q90,120 60,130"/>
+      <path d="M120,150 Q130,110 160,100"/>
+      <path d="M150,200 Q120,180 100,190"/>
+      <path d="M150,200 Q155,165 180,155"/>
+      <ellipse cx="55" cy="128" rx="18" ry="10" transform="rotate(-30 55 128)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
+      <ellipse cx="162" cy="98" rx="16" ry="9" transform="rotate(10 162 98)" fill="#b5c4a5" stroke="none" opacity="0.5"/>
+      <ellipse cx="96" cy="188" rx="15" ry="8" transform="rotate(-20 96 188)" fill="#b5c4a5" stroke="none" opacity="0.5"/>
+      <circle cx="200" cy="78" r="4" fill="#b8785a" opacity="0.7" stroke="none"/>
+    </g>
+  </svg>
+
+  <svg class="botanical botanical-tr" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#7a8c6e" stroke-width="1">
+      <path d="M20,180 Q50,130 90,90 Q120,60 170,40"/>
+      <path d="M90,90 Q70,65 50,72"/>
+      <path d="M90,90 Q100,62 125,55"/>
+      <ellipse cx="46" cy="70" rx="14" ry="8" transform="rotate(-25 46 70)" fill="#b5c4a5" stroke="none" opacity="0.55"/>
+      <ellipse cx="127" cy="53" rx="13" ry="7" transform="rotate(5 127 53)" fill="#b5c4a5" stroke="none" opacity="0.5"/>
+      <circle cx="170" cy="38" r="5" fill="#b8785a" opacity="0.6" stroke="none"/>
+    </g>
+  </svg>
+
+  <div class="hero-inner">
+    <p class="hero-label">Nous avons l'immense joie de vous convier à notre mariage</p>
+    <h1 class="hero-names">Anthony<br><span>&</span><br>Yona</h1>
+    <div class="divider-leaf">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.5"><path d="M12 22c5-5 9-10 5-16C13 2 6 6 3 12c1 5 5 8 9 10z"/></svg>
+    </div>
+    <p class="hero-date">Le 5 Juillet 2027</p>
+  </div>
+
+  <div class="scroll-hint">Défiler</div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="section" id="decompte">
+  <p class="section-tag">Le grand jour approche</p>
+  <h2 class="section-title">Plus que...</h2>
+  <div class="countdown-wrap">
+    <div class="count-card"><span class="count-num" id="days">—</span><span class="count-label">Jours</span></div>
+    <div class="count-card"><span class="count-num" id="hours">—</span><span class="count-label">Heures</span></div>
+    <div class="count-card"><span class="count-num" id="minutes">—</span><span class="count-label">Minutes</span></div>
+    <div class="count-card"><span class="count-num" id="seconds">—</span><span class="count-label">Secondes</span></div>
+  </div>
+</section>
+
+<!-- LIEU -->
+<section class="section section-alt" id="lieu">
+  <p class="section-tag">Où nous rejoindre</p>
+  <h2 class="section-title">Le lieu de notre célébration</h2>
+
+  <div class="lieu-grid">
+
+    <!-- Cérémonie -->
+    <div class="lieu-card">
+      <div class="lieu-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>Cérémonie civile</h3>
+      <p>La cérémonie officielle se tiendra à la Mairie de Montmorency, dans la salle des mariages au rez-de-chaussée.</p>
+      <address>
+        Mairie de Montmorency<br>
+        3 Place du Général de Gaulle<br>
+        95160 Montmorency
+      </address>
+      <a href="https://maps.google.com/?q=Mairie+de+Montmorency" target="_blank" class="map-link">
+        Voir sur Google Maps
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+    <!-- Réception -->
+    <div class="lieu-card">
+      <div class="lieu-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <h3>Réception & dîner</h3>
+      <p>La soirée se poursuivra au Domaine des Roses Sauvages, un mas provençal entouré de vignes et de lavandes.</p>
+      <address>
+        Domaine des Roses Sauvages<br>
+        Route des Oliviers<br>
+        84800 L'Isle-sur-la-Sorgue
+      </address>
+      <a href="https://maps.google.com/?q=L'Isle-sur-la-Sorgue" target="_blank" class="map-link">
+        Voir sur Google Maps
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROGRAMME -->
+<section class="section" id="programme">
+  <p class="section-tag">Notre journée</p>
+  <h2 class="section-title">Le programme du 5 juillet</h2>
+
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-time">11h00</p>
+      <h3 class="timeline-title">Cérémonie civile</h3>
+      <p class="timeline-desc">Rendez-vous à la Mairie de Montmorency pour l'échange officiel de nos vœux devant M. le Maire.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-time">12h30</p>
+      <h3 class="timeline-title">Vin d'honneur</h3>
+      <p class="timeline-desc">Retrouvez-nous dans les jardins du domaine pour un cocktail en plein air, champagne et canapés de saison.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-time">15h00</p>
+      <h3 class="timeline-title">Cérémonie laïque</h3>
+      <p class="timeline-desc">Une cérémonie intime et personnelle sous les chênes du domaine, entourés de ceux que nous aimons.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-time">19h00</p>
+      <h3 class="timeline-title">Dîner de gala</h3>
+      <p class="timeline-desc">Place à la fête autour d'un dîner gastronomique dans la grande salle du domaine, discours et surprises au programme.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-time">22h00</p>
+      <h3 class="timeline-title">Soirée dansante</h3>
+      <p class="timeline-desc">La piste de danse est ouverte ! DJ et live music jusqu'au bout de la nuit pour célébrer notre union.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- RSVP -->
+<section class="rsvp-section" id="rsvp">
+  <div class="rsvp-inner">
+    <p class="rsvp-eyebrow">Répondez à notre invitation</p>
+    <h2 class="rsvp-title">Serez-vous des nôtres ?</h2>
+    <p class="rsvp-sub">Merci de confirmer votre présence avant le <strong>1er mai 2027</strong> en remplissant notre formulaire ci-dessous.</p>
+    <a href="VOTRE_LIEN_GOOGLE_FORMS_ICI" target="_blank" class="rsvp-btn">
+      Confirmer ma présence
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-names">Anthony & Yona</div>
+  <p>5 · 07 · 2027</p>
+  <p style="margin-top:0.5rem; font-size:0.75rem; opacity:0.6;">Avec tout notre amour ✦</p>
+</footer>
+
+<script>
+  const wedding = new Date('2027-07-05T11:00:00');
+  function update() {
+    const diff = wedding - new Date();
+    if (diff <= 0) {
+      ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).textContent = '0');
+      return;
+    }
+    document.getElementById('days').textContent = Math.floor(diff / 86400000);
+    document.getElementById('hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+  }
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
