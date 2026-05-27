@@ -495,32 +495,6 @@
 </head>
 <body>
 
-<!-- ✅ BLOCAGE MOBILE UNIQUEMENT -->
-<script>
-  function isMobile() {
-    return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
-
-  if (!isMobile()) {
-    document.body.innerHTML = `
-      <div style="
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-family: Arial;
-        padding: 20px;
-        background: #f5f0e8;">
-        <div>
-          <h1>Accès réservé mobile 📱</h1>
-          <p>Ce site est uniquement accessible sur téléphone.</p>
-        </div>
-      </div>
-    `;
-  }
-</script>
-
 <!-- NAV -->
 <nav>
   <a href="#accueil">Accueil</a>
