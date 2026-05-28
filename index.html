@@ -68,6 +68,18 @@
   }
   nav a:hover { color: var(--brown); }
 
+  /* LOGO in nav */
+  .nav-logo {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    opacity: 1;
+  }
+
   /* HERO */
   .hero {
     min-height: 100vh;
@@ -78,18 +90,6 @@
     position: relative;
     padding: 6rem 2rem 4rem;
     overflow: hidden;
-  }
-
-  /* LOGO */
-  .nav-logo {
-  position: absolute;
-  left: 0.5rem;
-  top: 70%;
-  transform: translateY(-50%);
-  width: 30px;   /* taille très discrète */
-  height: 30px;
-  object-fit: contain;
-  opacity: 1;
   }
 
   .hero-bg {
@@ -105,7 +105,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(245,240,232,0.52);
+    background: linear-gradient(to bottom, rgba(245,240,232,0.55), rgba(245,240,232,0.45));
   }
 
   .botanical { position: absolute; pointer-events: none; z-index: 1; }
@@ -129,18 +129,20 @@
     color: var(--sage);
     opacity: 0;
     animation: fadeUp 0.8s ease 0.2s forwards;
+    text-shadow: 0 1px 8px rgba(255,255,255,0.9);
   }
 
   .hero-names {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(3.2rem, 14vw, 5.5rem);
-    font-weight: 300;
+    font-weight: 400;
     font-style: italic;
     line-height: 1.05;
     color: var(--brown);
     opacity: 0;
     animation: fadeUp 1s ease 0.5s forwards;
-    text-shadow: 0 2px 20px rgba(245,240,232,0.6);
+    text-shadow: 0 2px 12px rgba(255,255,255,0.85), 0 4px 30px rgba(255,255,255,0.6);
+    -webkit-text-stroke: 0.3px rgba(90,69,52,0.3);
   }
   .hero-names span { color: var(--terracotta); font-style: normal; }
 
@@ -161,12 +163,17 @@
 
   .hero-date {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
-    font-weight: 300;
-    color: var(--muted);
-    letter-spacing: 0.1em;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #3a2d22;
+    letter-spacing: 0.12em;
     opacity: 0;
     animation: fadeUp 0.8s ease 1s forwards;
+    text-shadow: 0 2px 12px rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.35);
+    padding: 4px 18px;
+    border-radius: 100px;
+    backdrop-filter: blur(2px);
   }
 
   .scroll-hint {
@@ -223,7 +230,7 @@
     margin-top: -1.5rem;
   }
 
-  /* COUNTDOWN */
+  /* COUNTDOWN — smaller */
   .countdown-wrap {
     display: flex;
     gap: 0;
@@ -244,14 +251,14 @@
 
   .count-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.6rem, 15vw, 5rem);
+    font-size: clamp(1.8rem, 9vw, 3rem);
     font-weight: 300;
     color: var(--brown);
     line-height: 1;
   }
 
   .count-label {
-    font-size: 8px;
+    font-size: 7px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--sage);
@@ -259,12 +266,50 @@
 
   .count-sep {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
+    font-size: 1.4rem;
     color: var(--sage-light);
     line-height: 1;
-    margin-bottom: 1rem;
+    margin-bottom: 0.7rem;
     padding: 0 2px;
   }
+
+  /* AGENDA BUTTON */
+  .agenda-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .agenda-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .agenda-btns { display: flex; gap: 0.8rem; }
+  .agenda-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0.65rem 1.2rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: background 0.2s, color 0.2s;
+  }
+  .agenda-btn-ios {
+    border-color: rgba(122,140,110,0.5);
+    color: var(--sage);
+    background: var(--sage-pale);
+  }
+  .agenda-btn-ios:hover { background: var(--sage-light); color: white; }
+  .agenda-btn-android {
+    border-color: rgba(184,120,90,0.4);
+    color: var(--terracotta);
+    background: rgba(184,120,90,0.07);
+  }
+  .agenda-btn-android:hover { background: var(--terracotta); color: white; }
 
   /* LIEU */
   .lieu-grid {
@@ -536,189 +581,6 @@
     width: 100%;
   }
 
-  /* ENVELOPE */
-  .envelope-section {
-    padding: 5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    background: var(--sage-pale);
-    position: relative;
-    overflow: hidden;
-  }
-  .envelope-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(122,140,110,0.1) 0%, transparent 70%);
-  }
-
-  .envelope-inner {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .envelope-wrap {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
-  .envelope-svg-wrap {
-    position: relative;
-    width: 200px;
-    height: 145px;
-  }
-
-  .env-body {
-    width: 200px; height: 130px;
-    background: white;
-    border-radius: 4px 4px 8px 8px;
-    position: absolute;
-    bottom: 0;
-    border: 1.5px solid rgba(122,140,110,0.3);
-    box-shadow: 0 8px 30px rgba(90,69,52,0.12);
-    overflow: hidden;
-  }
-
-  .env-v-left {
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 0;
-    border-style: solid;
-    border-width: 65px 100px 0 0;
-    border-color: transparent rgba(122,140,110,0.12) transparent transparent;
-  }
-  .env-v-right {
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 0; height: 0;
-    border-style: solid;
-    border-width: 0 0 65px 100px;
-    border-color: transparent transparent rgba(122,140,110,0.12) transparent;
-  }
-
-  .env-letter {
-    position: absolute;
-    bottom: 10px; left: 20px; right: 20px;
-    height: 90px;
-    background: var(--cream);
-    border-radius: 4px;
-    border: 1px solid rgba(122,140,110,0.2);
-    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1) 0.2s;
-    transform: translateY(0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-  }
-  .envelope-wrap.open .env-letter { transform: translateY(-90px); }
-
-  .env-letter-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.7rem;
-    font-style: italic;
-    color: var(--sage);
-    text-align: center;
-    line-height: 1.5;
-  }
-
-  .env-flap-border {
-    position: absolute;
-    top: 0; left: -1px; right: -1px;
-    width: 0; height: 0;
-    border-left: 101px solid transparent;
-    border-right: 101px solid transparent;
-    border-top: 71px solid rgba(122,140,110,0.3);
-    transform-origin: top center;
-    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
-    z-index: 9;
-  }
-  .env-flap {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    width: 0; height: 0;
-    border-left: 100px solid transparent;
-    border-right: 100px solid transparent;
-    border-top: 70px solid white;
-    transform-origin: top center;
-    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
-    z-index: 10;
-    filter: drop-shadow(0 2px 4px rgba(90,69,52,0.1));
-  }
-  .envelope-wrap.open .env-flap,
-  .envelope-wrap.open .env-flap-border { transform: rotateX(180deg); }
-
-  .envelope-hint { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.05em; }
-
-  /* STD MODAL */
-  .std-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(58,46,36,0.7);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    backdrop-filter: blur(4px);
-  }
-  .std-overlay.visible { opacity: 1; pointer-events: all; }
-
-  .std-modal {
-    position: relative;
-    max-width: 340px;
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    transform: scale(0.9);
-    transition: transform 0.3s;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-  }
-  .std-overlay.visible .std-modal { transform: scale(1); }
-  .std-modal img { width: 100%; display: block; }
-
-  .std-placeholder {
-    background: var(--cream);
-    padding: 3rem 2rem;
-    text-align: center;
-  }
-  .std-placeholder p:first-child {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-style: italic;
-    color: var(--brown);
-  }
-  .std-placeholder p:nth-child(2) { margin-top: 0.5rem; color: var(--muted); font-size: 0.9rem; }
-  .std-placeholder p:last-child { margin-top: 1rem; color: var(--sage); font-size: 0.78rem; }
-
-  .std-close {
-    position: absolute;
-    top: 12px; right: 12px;
-    width: 32px; height: 32px;
-    background: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    font-size: 14px;
-    color: var(--brown);
-  }
-
   /* RSVP */
   .rsvp-section {
     background: white;
@@ -768,13 +630,13 @@
     cursor: pointer;
   }
 
-  /* GALLERY */
+  /* GALLERY — compact cards with peek */
   .gallery-section {
-    padding: 5rem 0 0;
+    padding: 5rem 0 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.5rem;
+    gap: 2rem;
     background: var(--cream);
     overflow: hidden;
   }
@@ -787,25 +649,31 @@
     padding: 0 1.5rem;
   }
 
-  .gallery-slider {
+  .gallery-viewport {
     width: 100%;
-    position: relative;
     overflow: hidden;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
   }
 
   .gallery-track {
     display: flex;
-    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    gap: 12px;
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    will-change: transform;
   }
 
   .gallery-slide {
-    min-width: 100%;
-    height: 72vw;
-    max-height: 440px;
-    position: relative;
+    min-width: calc(75vw);
+    max-width: 280px;
+    height: calc(75vw * 1.1);
+    max-height: 320px;
+    border-radius: 16px;
     overflow: hidden;
     flex-shrink: 0;
     background: var(--sage-pale);
+    box-shadow: 0 4px 20px rgba(90,69,52,0.12);
+    position: relative;
   }
 
   .gallery-slide img {
@@ -830,7 +698,6 @@
     display: flex;
     gap: 8px;
     justify-content: center;
-    padding: 1.5rem 0 2rem;
   }
 
   .gallery-dot {
@@ -874,10 +741,18 @@
 </head>
 <body>
 
+<!-- DESKTOP BLOCK -->
+<div id="desktop-block">
+  <h1>Accès réservé mobile 📱</h1>
+  <p>Ce site est uniquement accessible sur téléphone.</p>
+</div>
+
+<!-- MAIN (mobile) -->
+<div id="main-content">
+
 <!-- NAV -->
 <nav>
-  <img src="logo.jpeg" class="nav-logo" alt="Logo">
-
+  <img src="logo.jpeg" class="nav-logo" alt="Logo AY" id="navLogo">
   <a href="#accueil">Accueil</a>
   <a href="#decompte">Décompte</a>
   <a href="#lieu">Lieu</a>
@@ -886,8 +761,6 @@
   <a href="#hebergement">Hôtels</a>
   <a href="#rsvp">RSVP</a>
 </nav>
-
-
 
 <!-- HERO -->
 <section class="hero" id="accueil">
@@ -932,16 +805,15 @@
 <!-- COUNTDOWN -->
 <section class="section" id="decompte">
   <p class="section-tag">Le grand jour approche</p>
-  <h2 class="section-title">Countdown</h2>
   <div class="countdown-wrap">
     <div class="count-unit">
       <span class="count-num" id="days">—</span>
-      <span class="count-label">Days</span>
+      <span class="count-label">Jours</span>
     </div>
     <div class="count-sep">·</div>
     <div class="count-unit">
       <span class="count-num" id="hours">—</span>
-      <span class="count-label">Hours</span>
+      <span class="count-label">Heures</span>
     </div>
     <div class="count-sep">·</div>
     <div class="count-unit">
@@ -951,7 +823,22 @@
     <div class="count-sep">·</div>
     <div class="count-unit">
       <span class="count-num" id="seconds">—</span>
-      <span class="count-label">Seconds</span>
+      <span class="count-label">Secondes</span>
+    </div>
+  </div>
+
+  <!-- ADD TO CALENDAR -->
+  <div class="agenda-wrap">
+    <p class="agenda-label">Ajouter à mon agenda</p>
+    <div class="agenda-btns">
+      <a class="agenda-btn agenda-btn-ios" id="btnApple" href="#">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        iOS / iPhone
+      </a>
+      <a class="agenda-btn agenda-btn-android" id="btnGoogle" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Yona&dates=20270705T133000Z/20270706T120000Z&details=Mariage+de+Anthony+et+Yona+%F0%9F%8C%BF&location=Quinta+dos+Amores,+Portugal" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Google / Android
+      </a>
     </div>
   </div>
 </section>
@@ -966,14 +853,13 @@
       <div class="lieu-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
-      <h3>Cérémonie civile</h3>
-      <p>La cérémonie officielle se tiendra à la mairie de Saint-Maur-des-Fossés à 15h30.</p>
+      <h3>Cérémonie &amp; Réception</h3>
+      <p>La cérémonie et la fête se tiendront dans l'écrin verdoyant de la Quinta dos Amores, au cœur du Portugal.</p>
       <address>
-        Mairie de Saint-Maur-des-Fossés<br>
-        Av. Charles de Gaulle<br>
-        94100 Saint-Maur-des-Fossés
+        Quinta dos Amores<br>
+        Portugal
       </address>
-      <a href="https://maps.google.com/?q=Mairie+de+Saint-Maur-des-Fosses" target="_blank" class="map-link">
+      <a href="https://maps.google.com/?q=Quinta+dos+Amores+Portugal" target="_blank" class="map-link">
         Voir sur Google Maps
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
       </a>
@@ -983,17 +869,12 @@
       <div class="lieu-icon">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </div>
-      <h3>Réception &amp; dîner</h3>
-      <p>La soirée se poursuivra dans la salle <em>(à définir)</em>.</p>
+      <h3>Brunch du lendemain</h3>
+      <p>Le brunch du Jour 2 se tiendra dans un lieu <em>à définir</em> — les détails vous seront communiqués prochainement.</p>
       <address>
-        (nom de l'endroit)<br>
-        (numéro + nom de rue)<br>
-        (ville)
+        (à définir)<br>
+        Portugal
       </address>
-      <a href="https://maps.google.com/?q=Saint-Maur-des-Fosses" target="_blank" class="map-link">
-        Voir sur Google Maps
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-      </a>
     </div>
   </div>
 </section>
@@ -1013,8 +894,8 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <span class="tl-time">15h</span>
-          <h3 class="tl-title">Cérémonie civile</h3>
-          <p class="tl-desc">Rendez-vous à la Mairie de Saint-Maur-des-Fossés pour l'échange officiel de nos vœux.</p>
+          <h3 class="tl-title">Cérémonie</h3>
+          <p class="tl-desc">Rendez-vous à la Quinta dos Amores pour l'échange de nos vœux.</p>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot"></div>
@@ -1090,39 +971,39 @@
   <div class="hebergement-grid">
 
     <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Hôtel du Parc</p>
-      <span class="hotel-distance">🚗 5 min de la cérémonie</span>
-      <p class="hotel-desc">Hôtel élégant avec spa et restaurant gastronomique, idéal pour un week-end de noces. Chambres lumineuses et vue sur les jardins.</p>
-      <p class="hotel-price">À partir de 120 € / nuit</p>
-      <a href="#" class="hotel-link">Réserver ↗</a>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Le Charme Fleuri</p>
-      <span class="hotel-distance">🚗 8 min de la cérémonie</span>
-      <p class="hotel-desc">Maison d'hôtes cosy et raffinée. Petit-déjeuner maison inclus, ambiance chaleureuse et familiale.</p>
-      <p class="hotel-price">À partir de 85 € / nuit</p>
-      <a href="#" class="hotel-link">Réserver ↗</a>
-    </div>
-
-    <div class="hotel-card">
       <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Villa des Roses</p>
-      <span class="hotel-distance">🚶 10 min à pied</span>
-      <p class="hotel-desc">Boutique hôtel avec piscine chauffée et terrasse panoramique. Notre coup de cœur pour les invités qui souhaitent se chouchouter.</p>
-      <p class="hotel-price">À partir de 195 € / nuit</p>
-      <a href="#" class="hotel-link">Réserver ↗</a>
+      <p class="hotel-name">Bairro Alto Hotel</p>
+      <span class="hotel-distance">🚗 ~45 min de la Quinta</span>
+      <p class="hotel-desc">Hôtel boutique iconique de Lisbonne avec vue panoramique sur la ville, terrasse et restaurant gastronomique. Élégance portugaise au sommet.</p>
+      <p class="hotel-price">À partir de 350 € / nuit</p>
+      <a href="https://www.bairroaltohotel.com" target="_blank" class="hotel-link">Réserver ↗</a>
+    </div>
+
+    <div class="hotel-card">
+      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="hotel-name">Quinta da Bela Vista</p>
+      <span class="hotel-distance">🚗 ~20 min de la Quinta</span>
+      <p class="hotel-desc">Manoir historique niché dans la nature, avec piscine et jardins romantiques. Ambiance intime et authentique, idéale pour un week-end de fête.</p>
+      <p class="hotel-price">À partir de 180 € / nuit</p>
+      <a href="https://www.belavistalisboa.com" target="_blank" class="hotel-link">Réserver ↗</a>
+    </div>
+
+    <div class="hotel-card">
+      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="hotel-name">Penha Longa Resort</p>
+      <span class="hotel-distance">🚗 ~30 min de la Quinta</span>
+      <p class="hotel-desc">Resort luxueux au cœur de la Serra de Sintra, avec spa, golf et plusieurs restaurants. Un cadre naturel exceptionnel pour prolonger le week-end.</p>
+      <p class="hotel-price">À partir de 250 € / nuit</p>
+      <a href="https://www.penhalonga.com" target="_blank" class="hotel-link">Réserver ↗</a>
     </div>
 
     <div class="hotel-card">
       <div class="hotel-stars"><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Ibis Styles Saint-Maur</p>
-      <span class="hotel-distance">🚗 12 min de la cérémonie</span>
-      <p class="hotel-desc">Option pratique et abordable. Confortable et fonctionnel avec parking gratuit.</p>
-      <p class="hotel-price">À partir de 65 € / nuit</p>
-      <a href="#" class="hotel-link">Réserver ↗</a>
+      <p class="hotel-name">Hotel Sintra Jardim</p>
+      <span class="hotel-distance">🚗 ~15 min de la Quinta</span>
+      <p class="hotel-desc">Option charmante et abordable au cœur de Sintra. Confortable, bien situé et à deux pas des sites classés UNESCO.</p>
+      <p class="hotel-price">À partir de 90 € / nuit</p>
+      <a href="https://www.sintrahotels.com" target="_blank" class="hotel-link">Réserver ↗</a>
     </div>
 
   </div>
@@ -1141,48 +1022,48 @@
   </div>
 </section>
 
-<!-- GALERIE -->
+<!-- GALERIE — compact cards with peek -->
 <section class="gallery-section" id="galerie">
   <div class="gallery-header">
     <p class="section-tag">Nos souvenirs</p>
     <h2 class="section-title">Nous deux</h2>
   </div>
 
-  <div class="gallery-slider">
+  <div class="gallery-viewport">
     <div class="gallery-track" id="galleryTrack">
-      <div class="gallery-slide" id="slide0">
-        <img src="bisous_a_genoux.jpg" alt="Photo 1">
-        <div class="gallery-slide-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>photo1.png</span>
+      <div class="gallery-slide">
+        <img src="bisous_a_genoux.jpg" alt="Photo 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gallery-slide-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo 1</span>
         </div>
       </div>
-      <div class="gallery-slide" id="slide1">
-        <img src="photo_couverture.jpg" alt="Photo 2">
-        <div class="gallery-slide-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>photo2.png</span>
+      <div class="gallery-slide">
+        <img src="photo_couverture.jpg" alt="Photo 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gallery-slide-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo 2</span>
         </div>
       </div>
-      <div class="gallery-slide" id="slide2">
-        <img src="regard_soleil.jpg" alt="Photo 3">
-        <div class="gallery-slide-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>photo3.png</span>
+      <div class="gallery-slide">
+        <img src="regard_soleil.jpg" alt="Photo 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gallery-slide-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo 3</span>
         </div>
       </div>
-      <div class="gallery-slide" id="slide3">
-        <img src="bague.jpg" alt="Photo 4">
-        <div class="gallery-slide-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>photo4.png</span>
+      <div class="gallery-slide">
+        <img src="bague.jpg" alt="Photo 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gallery-slide-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo 4</span>
         </div>
       </div>
-      <div class="gallery-slide" id="slide4">
-        <img src="noir_et_blanc.jpeg" alt="Photo 5">
-        <div class="gallery-slide-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>photo5.png</span>
+      <div class="gallery-slide">
+        <img src="noir_et_blanc.jpeg" alt="Photo 5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gallery-slide-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo 5</span>
         </div>
       </div>
     </div>
@@ -1201,6 +1082,15 @@
 </div>
 
 <script>
+// MOBILE DETECTION
+function isMobile() {
+  return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+}
+if (!isMobile()) {
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('desktop-block').style.display = 'flex';
+}
+
 // COUNTDOWN
 var wedding = new Date('2027-07-05T15:30:00');
 function updateCountdown() {
@@ -1217,48 +1107,81 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// GALLERY — show placeholder if image missing
-document.querySelectorAll('.gallery-slide img').forEach(function(img) {
-  img.addEventListener('error', function() {
-    img.style.display = 'none';
-    var ph = img.nextElementSibling;
-    if (ph) ph.style.display = 'flex';
-  });
+// ICS DOWNLOAD (iOS)
+document.getElementById('btnApple').addEventListener('click', function(e) {
+  e.preventDefault();
+  var ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    'SUMMARY:Mariage Anthony & Yona 🌿',
+    'DTSTART:20270705T133000Z',
+    'DTEND:20270706T120000Z',
+    'LOCATION:Quinta dos Amores, Portugal',
+    'DESCRIPTION:Mariage de Anthony et Yona — Quinta dos Amores, Portugal',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'mariage-anthony-yona.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 });
 
 // GALLERY SLIDER
+var viewport = document.querySelector('.gallery-viewport');
 var track = document.getElementById('galleryTrack');
 var dotsContainer = document.getElementById('galleryDots');
 var slides = document.querySelectorAll('.gallery-slide');
 var current = 0;
 var autoTimer;
+var slideW = 0;
+var gap = 12;
+
+function computeSlideW() {
+  if (slides[0]) slideW = slides[0].offsetWidth;
+}
+computeSlideW();
+window.addEventListener('resize', computeSlideW);
 
 slides.forEach(function(_, i) {
   var dot = document.createElement('div');
   dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
-  dot.addEventListener('click', function(){ goTo(i); });
+  dot.addEventListener('click', function(){ goTo(i); resetAuto(); });
   dotsContainer.appendChild(dot);
 });
 
 function goTo(idx) {
-  current = (idx + slides.length) % slides.length;
-  track.style.transform = 'translateX(-' + (current * 100) + '%)';
+  current = Math.max(0, Math.min(idx, slides.length - 1));
+  computeSlideW();
+  track.style.transform = 'translateX(-' + (current * (slideW + gap)) + 'px)';
   document.querySelectorAll('.gallery-dot').forEach(function(d, i){
     d.classList.toggle('active', i === current);
   });
 }
 
-function startAuto() { autoTimer = setInterval(function(){ goTo(current + 1); }, 3500); }
+function resetAuto() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(function(){
+    goTo(current < slides.length - 1 ? current + 1 : 0);
+  }, 3500);
+}
 
 var touchStartX = 0;
-track.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; clearInterval(autoTimer); });
+track.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; clearInterval(autoTimer); }, {passive:true});
 track.addEventListener('touchend', function(e) {
   var dx = e.changedTouches[0].clientX - touchStartX;
   if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-  startAuto();
+  resetAuto();
 });
 
-startAuto();
+resetAuto();
 </script>
 </body>
 </html>
