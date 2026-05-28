@@ -1128,42 +1128,6 @@
   </div>
 </section>
 
-<!-- SAVE THE DATE — ENVELOPPE -->
-<section class="envelope-section" id="savethedate">
-  <div class="envelope-inner">
-    <p class="section-tag">Un petit mot pour vous</p>
-    <h2 class="section-title">Notre save the date</h2>
-
-    <div class="envelope-wrap" id="envelopeWrap" onclick="openEnvelope()">
-      <div class="envelope-svg-wrap">
-        <div class="env-body">
-          <div class="env-v-left"></div>
-          <div class="env-v-right"></div>
-          <div class="env-letter" id="envLetter">
-            <div class="env-letter-text">Anthony<br>&amp; Yona<br>5 · 07 · 2027</div>
-          </div>
-        </div>
-        <div class="env-flap-border" id="envFlapBorder"></div>
-        <div class="env-flap" id="envFlap"></div>
-      </div>
-      <p class="envelope-hint" id="envelopeHint">Appuyez pour ouvrir ✦</p>
-    </div>
-  </div>
-</section>
-
-<!-- STD MODAL -->
-<div class="std-overlay" id="stdOverlay">
-  <div class="std-modal" id="stdModal">
-    <img src="savethedate.jpeg" alt="Save the Date Anthony &amp; Yona" id="stdImg">
-    <div class="std-placeholder" id="stdPlaceholder" style="display:none">
-      <p>Anthony &amp; Yona</p>
-      <p>5 · 07 · 2027</p>
-      <p>Remplacez savethedate.png par votre image</p>
-    </div>
-    <button class="std-close" id="stdClose">✕</button>
-  </div>
-</div>
-
 <!-- RSVP -->
 <section class="rsvp-section" id="rsvp">
   <div class="rsvp-inner">
@@ -1295,39 +1259,6 @@ track.addEventListener('touchend', function(e) {
 });
 
 startAuto();
-
-// ENVELOPE
-var envelopeOpened = false;
-function openEnvelope() {
-  if (!envelopeOpened) {
-    document.getElementById('envelopeWrap').classList.add('open');
-    document.getElementById('envelopeHint').textContent = 'Voir le save the date ✦';
-    envelopeOpened = true;
-    setTimeout(function(){ showStd(); }, 700);
-  } else {
-    showStd();
-  }
-}
-
-function showStd() {
-  document.getElementById('stdOverlay').classList.add('visible');
-}
-
-// Check if savethedate.png loads
-var stdImg = document.getElementById('stdImg');
-stdImg.addEventListener('error', function() {
-  stdImg.style.display = 'none';
-  document.getElementById('stdPlaceholder').style.display = 'block';
-});
-
-document.getElementById('stdOverlay').addEventListener('click', function(e){
-  if (e.target === this) closeStd();
-});
-document.getElementById('stdClose').addEventListener('click', closeStd);
-
-function closeStd() {
-  document.getElementById('stdOverlay').classList.remove('visible');
-}
 </script>
 </body>
 </html>
