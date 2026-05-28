@@ -1237,15 +1237,6 @@
 </div>
 
 <script>
-// MOBILE DETECTION
-function isMobile() {
-  return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-}
-if (!isMobile()) {
-  document.getElementById('main-content').style.display = 'none';
-  document.getElementById('desktop-block').style.display = 'flex';
-}
-
 // COUNTDOWN
 var wedding = new Date('2027-07-05T15:30:00');
 function updateCountdown() {
