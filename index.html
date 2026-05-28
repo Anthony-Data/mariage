@@ -67,7 +67,7 @@
     transition: color 0.2s;
   }
   nav a:hover { color: var(--brown); }
-
+  
   /* HERO */
   .hero {
     min-height: 100vh;
@@ -78,6 +78,18 @@
     position: relative;
     padding: 6rem 2rem 4rem;
     overflow: hidden;
+  }
+
+  /* LOGO */
+  .nav-logo {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;   /* taille très discrète */
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.8;
   }
 
   .hero-bg {
@@ -874,6 +886,8 @@
   <a href="#hebergement">Hôtels</a>
   <a href="#rsvp">RSVP</a>
 </nav>
+
+
 
 <!-- HERO -->
 <section class="hero" id="accueil">
