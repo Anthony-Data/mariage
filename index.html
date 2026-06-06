@@ -74,8 +74,8 @@
     left: 0.8rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 53px;
     object-fit: contain;
     opacity: 1;
   }
@@ -179,8 +179,8 @@
   .scroll-hint {
     position: absolute;
     bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -189,6 +189,7 @@
     font-size: 9px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
+    text-align: center;
     opacity: 0;
     animation: fadeUp 0.8s ease 1.4s forwards;
     z-index: 2;
@@ -251,14 +252,14 @@
 
   .count-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.8rem, 9vw, 3rem);
+    font-size: clamp(2.8rem, 13vw, 4.5rem);
     font-weight: 300;
     color: var(--brown);
     line-height: 1;
   }
 
   .count-label {
-    font-size: 7px;
+    font-size: 13px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--sage);
@@ -727,6 +728,14 @@
     font-style: italic;
     color: var(--brown);
   }
+  .footer-amp {
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--sage);
+    font-weight: 300;
+    line-height: 1;
+    vertical-align: middle;
+  }
   footer p { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; }
 
   @keyframes fadeUp {
@@ -1022,7 +1031,6 @@
 <!-- GALERIE — compact cards with peek -->
 <section class="gallery-section" id="galerie">
   <div class="gallery-header">
-    <p class="section-tag">Nos souvenirs</p>
     <h2 class="section-title">Nous deux</h2>
   </div>
 
@@ -1071,7 +1079,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-names">Anthony &amp; Yona</div>
+  <div class="footer-names">Anthony <span class="footer-amp">&amp;</span> Yona</div>
   <p>5 · 07 · 2027</p>
   <p style="margin-top:0.5rem;font-size:0.72rem;opacity:0.6;">Avec tout notre amour ✦</p>
 </footer>
@@ -1140,6 +1148,9 @@ var current = 0;
 var autoTimer;
 var slideW = 0;
 var gap = 12;
+var touchStartX = 0;
+var touchStartY = 0;
+var isSwiping = false;
 
 function computeSlideW() {
   if (slides[0]) slideW = slides[0].offsetWidth;
@@ -1170,11 +1181,24 @@ function resetAuto() {
   }, 3500);
 }
 
-var touchStartX = 0;
-track.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; clearInterval(autoTimer); }, {passive:true});
-track.addEventListener('touchend', function(e) {
+// Swipe tactile sur le viewport
+viewport.addEventListener('touchstart', function(e){
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  isSwiping = false;
+  clearInterval(autoTimer);
+}, {passive: true});
+
+viewport.addEventListener('touchmove', function(e){
+  var dx = Math.abs(e.touches[0].clientX - touchStartX);
+  var dy = Math.abs(e.touches[0].clientY - touchStartY);
+  if (!isSwiping && dx > 8) isSwiping = true;
+  if (isSwiping && dx > dy) e.preventDefault();
+}, {passive: false});
+
+viewport.addEventListener('touchend', function(e){
   var dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+  if (isSwiping && Math.abs(dx) > 30) goTo(current + (dx < 0 ? 1 : -1));
   resetAuto();
 });
 
