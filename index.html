@@ -786,8 +786,8 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
   <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
-  <video id="env-video" src="envelope_open.mp4" playsinline preload="auto" autoplay muted></video>
-  <p id="env-hint">Appuyez pour accéder au site</p>
+  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
+  <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
 <!-- DESKTOP BLOCK -->
@@ -1263,12 +1263,18 @@ function revealSite() {
   }, 720);
 }
 
-var envVideo = document.getElementById('env-video');
+var envVideo   = document.getElementById('env-video');
+var envOverlay = document.getElementById('env-overlay');
+var envHint    = document.getElementById('env-hint');
 
-envVideo.play().catch(function() {});
-envVideo.addEventListener('ended', revealSite);
+function openEnvelope() {
+  envOverlay.removeEventListener('click', openEnvelope);
+  envHint.style.opacity = '0';
+  envVideo.play().catch(function() { revealSite(); });
+  envVideo.addEventListener('ended', revealSite);
+}
 
-document.getElementById('env-overlay').addEventListener('click', revealSite);
+envOverlay.addEventListener('click', openEnvelope);
 </script>
 </body>
 </html>
