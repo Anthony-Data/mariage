@@ -746,32 +746,54 @@
     z-index: 9999;
     cursor: pointer;
     overflow: hidden;
-    transition: transform 1.5s cubic-bezier(0.4,0,0.6,1);
+    background: #eeebe3;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     transform-origin: top center;
+    transition: transform 1.6s cubic-bezier(0.4, 0, 0.8, 1);
   }
-  #env-overlay.open-up { transform: translateY(-100%); }
+  #env-overlay.open-envelope {
+    transform: perspective(700px) rotateX(-92deg);
+  }
 
   #env-bg {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
+    object-position: center 42%;
     display: block;
+    pointer-events: none;
+  }
+
+  /* Logo superposé sur le sceau */
+  #env-logo-seal {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 108px;
+    height: 108px;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.78;
   }
 
   #env-hint {
     position: absolute;
-    bottom: 22%;
+    bottom: 20%;
     left: 0; right: 0;
     text-align: center;
     font-family: 'Jost', sans-serif;
     font-size: 10px;
     letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: rgba(155,120,55,0.75);
+    color: rgba(155,120,55,0.8);
     opacity: 0;
     animation: fadeUp 0.8s ease 2s forwards;
     transition: opacity 0.3s;
+    pointer-events: none;
   }
 </style>
 </head>
@@ -780,6 +802,7 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
   <img id="env-bg" src="envelope.jpg" alt="Enveloppe d'invitation">
+  <img id="env-logo-seal" src="logo.png" alt="Logo Y & A">
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
@@ -1238,26 +1261,31 @@ viewport.addEventListener('touchend', function(e){
 
 resetAuto();
 
-// ENVELOPE ANIMATION
+// ENVELOPE : cache le site derrière pendant l'affichage
+document.getElementById('main-content').style.visibility = 'hidden';
+document.getElementById('main-content').style.opacity = '0';
+document.body.style.overflow = 'hidden';
+
 function openEnvelope() {
   var overlay = document.getElementById('env-overlay');
   var hint    = document.getElementById('env-hint');
 
-  overlay.onclick = null;
+  overlay.removeEventListener('click', openEnvelope);
   hint.style.opacity = '0';
 
-  // L'enveloppe remonte comme un rabat qu'on soulève
-  setTimeout(function() {
-    overlay.classList.add('open-up');
-  }, 150);
+  // L'enveloppe se plie vers l'arrière (comme un vrai rabat)
+  overlay.classList.add('open-envelope');
 
-  // Retire l'overlay du DOM
+  // Révèle le site dès que l'animation est terminée
   setTimeout(function() {
     overlay.style.display = 'none';
-  }, 1800);
+    document.getElementById('main-content').style.visibility = '';
+    document.getElementById('main-content').style.transition = 'opacity 0.6s ease';
+    document.getElementById('main-content').style.opacity = '1';
+    document.body.style.overflow = '';
+  }, 1700);
 }
 
-// Clic sur n'importe quel endroit de l'enveloppe
 document.getElementById('env-overlay').addEventListener('click', openEnvelope);
 </script>
 </body>
