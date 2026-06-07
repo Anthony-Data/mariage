@@ -745,40 +745,64 @@
     inset: 0;
     z-index: 9999;
     cursor: pointer;
-    background: #eeebe3;
+    background: #f0ece6;
     overflow: hidden;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.7s ease;
   }
   #env-overlay.hide { opacity: 0; pointer-events: none; }
 
-  #env-poster, #env-video {
+  /* Image de fond (corps de l'enveloppe, reste en place) */
+  #env-body-img {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: opacity 80ms ease-out;
+    z-index: 1;
   }
-  #env-poster { opacity: 1; }
-  #env-video  { opacity: 0; }
+
+  /* Rabat (V-shape depuis le haut jusqu'au sceau) — s'ouvre en 3D */
+  #env-flap {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 56%);
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    z-index: 2;
+    transition: transform 1.6s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  #env-flap.open {
+    transform: perspective(1400px) rotateX(-185deg);
+  }
+  #env-flap-img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
 
   #env-hint {
     position: absolute;
     bottom: 20%;
     left: 0; right: 0;
     text-align: center;
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    color: rgba(155,120,55,0.8);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    color: rgba(160, 30, 30, 0.85);
     opacity: 0;
     animation: fadeUp 0.8s ease 2s forwards;
     transition: opacity 0.3s;
     pointer-events: none;
-    z-index: 1;
+    z-index: 5;
   }
 </style>
 </head>
@@ -786,8 +810,12 @@
 
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
-  <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
-  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
+  <!-- Corps (toujours visible) -->
+  <img id="env-body-img" src="envelope.jpg" alt="Enveloppe" draggable="false">
+  <!-- Rabat V (se soulève en 3D au clic) -->
+  <div id="env-flap">
+    <img id="env-flap-img" src="envelope.jpg" alt="" draggable="false">
+  </div>
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
@@ -1258,33 +1286,25 @@ function revealSite() {
     overlay.style.display = 'none';
     var mc = document.getElementById('main-content');
     mc.style.visibility = '';
-    mc.style.transition = 'opacity 0.7s ease';
+    mc.style.transition = 'opacity 0.8s ease';
     mc.style.opacity = '1';
     document.body.style.overflow = '';
-  }, 520);
+  }, 720);
 }
 
 function openEnvelope() {
   var overlay = document.getElementById('env-overlay');
-  var poster  = document.getElementById('env-poster');
-  var video   = document.getElementById('env-video');
+  var flap    = document.getElementById('env-flap');
   var hint    = document.getElementById('env-hint');
 
   overlay.removeEventListener('click', openEnvelope);
   hint.style.opacity = '0';
 
-  // Bascule vers la vidéo
-  poster.style.opacity = '0';
-  video.style.opacity  = '1';
-  video.play().catch(function() { revealSite(); });
+  // Le rabat V s'ouvre en 3D (soulèvement depuis le sceau vers le haut)
+  flap.classList.add('open');
 
-  // Quand la vidéo se termine → révèle le site
-  video.addEventListener('ended', revealSite);
-
-  // Sécurité : fallback si la vidéo ne se lance pas dans les 8 secondes
-  setTimeout(function() {
-    if (document.getElementById('env-overlay').style.display !== 'none') revealSite();
-  }, 8000);
+  // Quand le rabat est ouvert → overlay disparaît → site révélé
+  setTimeout(revealSite, 1700);
 }
 
 document.getElementById('env-overlay').addEventListener('click', openEnvelope);
