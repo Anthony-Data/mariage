@@ -751,42 +751,17 @@
   }
   #env-overlay.hide { opacity: 0; pointer-events: none; }
 
-  /* Image de fond (corps de l'enveloppe, reste en place) */
-  #env-body-img {
+  #env-poster, #env-video {
     position: absolute;
     inset: 0;
     width: 100%; height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    z-index: 1;
+    transition: opacity 50ms ease-out;
   }
-
-  /* Rabat (V-shape depuis le haut jusqu'au sceau) — s'ouvre en 3D */
-  #env-flap {
-    position: absolute;
-    inset: 0;
-    clip-path: polygon(0% 0%, 100% 0%, 50% 56%);
-    transform-origin: top center;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    z-index: 2;
-    transition: transform 1.6s cubic-bezier(0.4, 0, 0.6, 1);
-  }
-  #env-flap.open {
-    transform: perspective(1400px) rotateX(-185deg);
-  }
-  #env-flap-img {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
+  #env-poster { opacity: 1; }
+  #env-video  { opacity: 0; }
 
   #env-hint {
     position: absolute;
@@ -810,12 +785,8 @@
 
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
-  <!-- Corps (toujours visible) -->
-  <img id="env-body-img" src="envelope.jpg" alt="Enveloppe" draggable="false">
-  <!-- Rabat V (se soulève en 3D au clic) -->
-  <div id="env-flap">
-    <img id="env-flap-img" src="envelope.jpg" alt="" draggable="false">
-  </div>
+  <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
+  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
@@ -1294,17 +1265,24 @@ function revealSite() {
 
 function openEnvelope() {
   var overlay = document.getElementById('env-overlay');
-  var flap    = document.getElementById('env-flap');
+  var poster  = document.getElementById('env-poster');
+  var video   = document.getElementById('env-video');
   var hint    = document.getElementById('env-hint');
 
   overlay.removeEventListener('click', openEnvelope);
   hint.style.opacity = '0';
 
-  // Le rabat V s'ouvre en 3D (soulèvement depuis le sceau vers le haut)
-  flap.classList.add('open');
+  // Image s'efface, vidéo apparaît et joue
+  poster.style.opacity = '0';
+  video.style.opacity  = '1';
+  video.play().catch(function() { revealSite(); });
 
-  // Quand le rabat est ouvert → overlay disparaît → site révélé
-  setTimeout(revealSite, 1700);
+  video.addEventListener('ended', revealSite);
+
+  // Fallback 8s si la vidéo ne se lance pas
+  setTimeout(function() {
+    if (document.getElementById('env-overlay').style.display !== 'none') revealSite();
+  }, 8000);
 }
 
 document.getElementById('env-overlay').addEventListener('click', openEnvelope);
