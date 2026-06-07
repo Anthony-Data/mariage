@@ -660,7 +660,7 @@
   .gallery-track {
     display: flex;
     gap: 12px;
-    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
     will-change: transform;
   }
 
@@ -1255,7 +1255,19 @@ viewport.addEventListener('touchend', function(e){
   resetAuto();
 });
 
-resetAuto();
+// L'auto-defilement ne demarre que lorsque la galerie est visible a l'ecran
+var gallerySection = document.getElementById('galerie');
+if ('IntersectionObserver' in window && gallerySection) {
+  var galleryObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) resetAuto();
+      else clearInterval(autoTimer);
+    });
+  }, { threshold: 0.4 });
+  galleryObserver.observe(gallerySection);
+} else {
+  resetAuto();
+}
 
 // ENVELOPE : masque le site en arrière-plan
 document.getElementById('main-content').style.visibility = 'hidden';
@@ -1265,6 +1277,13 @@ document.body.style.overflow = 'hidden';
 function revealSite() {
   var overlay = document.getElementById('env-overlay');
   overlay.classList.add('hide');
+  // On s'assure d'arriver en haut de page (le body est le conteneur scrollable)
+  function toTop() {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }
+  toTop();
   setTimeout(function() {
     overlay.style.display = 'none';
     var mc = document.getElementById('main-content');
@@ -1272,6 +1291,7 @@ function revealSite() {
     mc.style.transition = 'opacity 0.8s ease';
     mc.style.opacity = '1';
     document.body.style.overflow = '';
+    toTop();
   }, 720);
 }
 
