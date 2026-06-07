@@ -762,6 +762,19 @@
   }
   #env-video { opacity: 1; }
 
+  /* Image figee posee au-dessus de la video : sert au fondu enchaine */
+  #env-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.7s ease;
+  }
+
   #env-hint {
     position: absolute;
     bottom: 25%;
@@ -775,12 +788,9 @@
     opacity: 0;
     pointer-events: none;
     z-index: 5;
-    animation: envHintIn 0.6s ease 2s forwards;
+    transition: opacity 0.6s ease;
   }
-  @keyframes envHintIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+  #env-hint.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -788,6 +798,7 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
   <video id="env-video" src="envelope_open.mp4" poster="poster_clean.jpg" playsinline preload="auto"></video>
+  <img id="env-poster" src="poster_clean.jpg" alt="">
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
@@ -1267,13 +1278,25 @@ function revealSite() {
 var envVideo   = document.getElementById('env-video');
 var envOverlay = document.getElementById('env-overlay');
 var envHint    = document.getElementById('env-hint');
+var envPoster  = document.getElementById('env-poster');
+
+// Apparition douce du texte 2s apres le chargement
+setTimeout(function() { envHint.classList.add('show'); }, 2000);
 
 function openEnvelope() {
   envOverlay.removeEventListener('click', openEnvelope);
-  envHint.style.animation = 'none';
-  envHint.style.opacity = '0';
-  envVideo.play().catch(function() { revealSite(); });
+  // Le texte d'invite s'efface en fondu
+  envHint.classList.remove('show');
   envVideo.addEventListener('ended', revealSite);
+
+  // On fond le poster pour reveler la video une fois la lecture lancee,
+  // ce qui masque l'a-coup de demarrage (decodage / saut d'image)
+  function fadePoster() { envPoster.style.opacity = '0'; }
+  envVideo.addEventListener('playing', fadePoster, { once: true });
+  setTimeout(fadePoster, 450); // filet de securite si 'playing' tarde
+
+  var p = envVideo.play();
+  if (p && p.catch) { p.catch(function() { revealSite(); }); }
 }
 
 envOverlay.addEventListener('click', openEnvelope);
