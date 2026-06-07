@@ -738,9 +738,229 @@
     0%, 100% { opacity: 0.4; }
     50%       { opacity: 1; }
   }
+
+  /* ===== ENVELOPPE INTRO ===== */
+  #env-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #f2ede6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  #env-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+  .env-botanical-bg {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.45;
+  }
+  .env-botanical-tl { top: 0; left: 0; width: 180px; }
+  .env-botanical-br { bottom: 0; right: 0; width: 180px; transform: rotate(180deg); }
+
+  #env-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.8rem;
+    perspective: 1200px;
+    position: relative;
+    z-index: 1;
+  }
+
+  #env-wrap {
+    position: relative;
+    width: min(310px, 86vw);
+    height: min(210px, 58vw);
+    filter: drop-shadow(0 14px 44px rgba(90,69,52,0.22)) drop-shadow(0 4px 12px rgba(90,69,52,0.1));
+  }
+
+  #env-interior {
+    position: absolute;
+    inset: 2px;
+    border-radius: 3px;
+    background: linear-gradient(165deg, #f8f3ee 0%, #ece5dc 100%);
+  }
+
+  #env-body {
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  #env-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 70%;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    transition: transform 1.8s cubic-bezier(0.4,0,0.2,1);
+    z-index: 3;
+  }
+  #env-flap.open { transform: rotateX(-186deg); }
+
+  #env-flap-front {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  #env-flap-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateX(180deg);
+    background: linear-gradient(170deg, #e2d9cf 0%, #cfc6bb 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 97%);
+  }
+
+  #env-seal {
+    position: absolute;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #cd8565 0%, #7c3f1c 100%);
+    left: 50%;
+    top: calc(68% - 35px);
+    transform: translateX(-50%);
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 4px 14px rgba(90,69,52,0.45),
+      inset 0 1px 5px rgba(255,255,255,0.2),
+      0 0 0 2.5px rgba(120,60,25,0.35);
+    transition: transform 0.25s ease, opacity 0.9s ease, box-shadow 0.25s;
+    animation: sealPulse 3.2s ease-in-out infinite;
+  }
+  #env-seal:hover {
+    transform: translateX(-50%) scale(1.07);
+    animation: none;
+    box-shadow: 0 6px 24px rgba(90,69,52,0.5), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 2.5px rgba(120,60,25,0.35);
+  }
+  #env-seal:active { transform: translateX(-50%) scale(0.92) !important; }
+  #env-seal.seal-opened {
+    opacity: 0 !important;
+    transform: translateX(-50%) scale(0.6) !important;
+    pointer-events: none;
+    animation: none !important;
+  }
+
+  @keyframes sealPulse {
+    0%,100% { box-shadow: 0 4px 14px rgba(90,69,52,0.45), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 0 rgba(184,120,90,0.6); }
+    55%     { box-shadow: 0 4px 14px rgba(90,69,52,0.45), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 13px rgba(184,120,90,0); }
+  }
+
+  .seal-monogram {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: rgba(248,243,238,0.93);
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+  }
+  .seal-monogram span { font-size: 20px; font-weight: 300; line-height: 1; }
+  .seal-monogram em   { font-size: 13px; font-style: italic; font-weight: 300; line-height: 1; }
+
+  .seal-ring {
+    position: absolute;
+    inset: 7px;
+    border-radius: 50%;
+    border: 0.8px solid rgba(248,243,238,0.22);
+    pointer-events: none;
+  }
+
+  #env-hint {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.6s forwards;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
+
+<!-- ======= ENVELOPPE D'INVITATION ======= -->
+<div id="env-overlay">
+
+  <!-- Botaniques de fond -->
+  <svg class="env-botanical-bg env-botanical-tl" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#7a8c6e" stroke-width="1.1">
+      <path d="M15,175 C38,132 72,88 115,58 C140,40 165,26 198,12"/>
+      <path d="M115,58 C90,50 66,48 44,56"/>
+      <path d="M145,38 C128,32 108,31 90,37"/>
+      <ellipse cx="40" cy="55" rx="17" ry="7" transform="rotate(-22 40 55)" fill="#b5c4a5" stroke="none" opacity="0.7"/>
+      <ellipse cx="88" cy="36" rx="15" ry="6" transform="rotate(-10 88 36)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
+      <ellipse cx="198" cy="12" rx="12" ry="5" transform="rotate(5 198 12)" fill="#b5c4a5" stroke="none" opacity="0.55"/>
+      <circle cx="168" cy="22" r="3.5" fill="#b8785a" stroke="none" opacity="0.55"/>
+      <circle cx="160" cy="14" r="2.5" fill="#b8785a" stroke="none" opacity="0.45"/>
+      <circle cx="175" cy="14" r="2" fill="#b8785a" stroke="none" opacity="0.4"/>
+    </g>
+  </svg>
+  <svg class="env-botanical-bg env-botanical-br" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#7a8c6e" stroke-width="1.1">
+      <path d="M15,175 C38,132 72,88 115,58 C140,40 165,26 198,12"/>
+      <path d="M115,58 C90,50 66,48 44,56"/>
+      <path d="M145,38 C128,32 108,31 90,37"/>
+      <ellipse cx="40" cy="55" rx="17" ry="7" transform="rotate(-22 40 55)" fill="#b5c4a5" stroke="none" opacity="0.7"/>
+      <ellipse cx="88" cy="36" rx="15" ry="6" transform="rotate(-10 88 36)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
+      <ellipse cx="198" cy="12" rx="12" ry="5" transform="rotate(5 198 12)" fill="#b5c4a5" stroke="none" opacity="0.55"/>
+    </g>
+  </svg>
+
+  <div id="env-scene">
+    <div id="env-wrap">
+
+      <!-- Intérieur (visible quand le rabat s'ouvre) -->
+      <div id="env-interior"></div>
+
+      <!-- Corps enveloppe avec plis -->
+      <div id="env-body">
+        <svg width="100%" height="100%" viewBox="0 0 310 210" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <rect width="310" height="210" fill="#e8dfd4"/>
+          <path d="M0,0 L0,210 L155,115 Z" fill="rgba(90,69,52,0.07)"/>
+          <path d="M310,0 L310,210 L155,115 Z" fill="rgba(90,69,52,0.04)"/>
+          <path d="M0,210 L310,210 L155,115 Z" fill="rgba(90,69,52,0.11)"/>
+          <line x1="0" y1="210" x2="155" y2="115" stroke="rgba(90,69,52,0.2)" stroke-width="0.6"/>
+          <line x1="310" y1="210" x2="155" y2="115" stroke="rgba(90,69,52,0.2)" stroke-width="0.6"/>
+        </svg>
+      </div>
+
+      <!-- Rabat supérieur -->
+      <div id="env-flap">
+        <div id="env-flap-front">
+          <svg width="100%" height="100%" viewBox="0 0 310 148" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0,0 L310,0 L155,143 Z" fill="#ddd3c5"/>
+            <path d="M1,1 L309,1 L155,142 Z" fill="none" stroke="rgba(90,69,52,0.1)" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div id="env-flap-back"></div>
+      </div>
+
+      <!-- Sceau de cire avec monogramme -->
+      <div id="env-seal" onclick="openEnvelope()">
+        <div class="seal-monogram">
+          <span>Y</span><em>&amp;</em><span>A</span>
+        </div>
+        <div class="seal-ring"></div>
+      </div>
+
+    </div>
+
+    <p id="env-hint">Appuyez sur le sceau pour ouvrir</p>
+  </div>
+</div>
 
 <!-- DESKTOP BLOCK -->
 <div id="desktop-block">
@@ -1086,6 +1306,7 @@ function isMobile() {
 if (!isMobile()) {
   document.getElementById('main-content').style.display = 'none';
   document.getElementById('desktop-block').style.display = 'flex';
+  document.getElementById('env-overlay').style.display = 'none';
 }
 
 // COUNTDOWN
@@ -1195,6 +1416,32 @@ viewport.addEventListener('touchend', function(e){
 });
 
 resetAuto();
+
+// ENVELOPE ANIMATION
+function openEnvelope() {
+  var seal    = document.getElementById('env-seal');
+  var flap    = document.getElementById('env-flap');
+  var overlay = document.getElementById('env-overlay');
+  var hint    = document.getElementById('env-hint');
+
+  seal.onclick = null; // évite le double-clic
+
+  // Masque le hint immédiatement
+  hint.style.transition = 'opacity 0.4s';
+  hint.style.opacity = '0';
+
+  // Ouvre le rabat (légèr délai pour la réactivité tactile)
+  setTimeout(function() { flap.classList.add('open'); }, 180);
+
+  // Dissout le sceau
+  setTimeout(function() { seal.classList.add('seal-opened'); }, 1000);
+
+  // Fondu sortant de l'overlay
+  setTimeout(function() { overlay.classList.add('fade-out'); }, 2500);
+
+  // Retire l'overlay du rendu
+  setTimeout(function() { overlay.style.display = 'none'; }, 4200);
+}
 </script>
 </body>
 </html>
