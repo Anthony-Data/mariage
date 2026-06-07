@@ -760,8 +760,8 @@
     display: block;
     transition: opacity 80ms ease-out;
   }
-  #env-poster { opacity: 1; }
-  #env-video  { opacity: 0; }
+  #env-poster { opacity: 0; }
+  #env-video  { opacity: 1; }
 
   #env-hint {
     position: absolute;
@@ -786,8 +786,8 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
   <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
-  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
-  <p id="env-hint">Appuyez pour ouvrir</p>
+  <video id="env-video" src="envelope_open.mp4" playsinline preload="auto" autoplay muted></video>
+  <p id="env-hint">Appuyez pour accéder au site</p>
 </div>
 
 <!-- DESKTOP BLOCK -->
@@ -1263,29 +1263,12 @@ function revealSite() {
   }, 720);
 }
 
-function openEnvelope() {
-  var overlay = document.getElementById('env-overlay');
-  var poster  = document.getElementById('env-poster');
-  var video   = document.getElementById('env-video');
-  var hint    = document.getElementById('env-hint');
+var envVideo = document.getElementById('env-video');
 
-  overlay.removeEventListener('click', openEnvelope);
-  hint.style.opacity = '0';
+envVideo.play().catch(function() {});
+envVideo.addEventListener('ended', revealSite);
 
-  // Image s'efface, vidéo apparaît et joue
-  poster.style.opacity = '0';
-  video.style.opacity  = '1';
-  video.play().catch(function() { revealSite(); });
-
-  video.addEventListener('ended', revealSite);
-
-  // Fallback 8s si la vidéo ne se lance pas
-  setTimeout(function() {
-    if (document.getElementById('env-overlay').style.display !== 'none') revealSite();
-  }, 8000);
-}
-
-document.getElementById('env-overlay').addEventListener('click', openEnvelope);
+document.getElementById('env-overlay').addEventListener('click', revealSite);
 </script>
 </body>
 </html>
