@@ -745,40 +745,24 @@
     inset: 0;
     z-index: 9999;
     cursor: pointer;
-    overflow: hidden;
     background: #eeebe3;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform-origin: top center;
-    transition: transform 1.6s cubic-bezier(0.4, 0, 0.8, 1);
+    overflow: hidden;
+    transition: opacity 0.5s ease;
   }
-  #env-overlay.open-envelope {
-    transform: perspective(700px) rotateX(-92deg);
-  }
+  #env-overlay.hide { opacity: 0; pointer-events: none; }
 
-  #env-bg {
+  #env-poster, #env-video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 42%;
+    object-position: center;
     display: block;
-    pointer-events: none;
+    transition: opacity 80ms ease-out;
   }
-
-  /* Logo superposé sur le sceau */
-  #env-logo-seal {
-    position: absolute;
-    top: 47%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 108px;
-    height: 108px;
-    object-fit: cover;
-    border-radius: 50%;
-    pointer-events: none;
-    mix-blend-mode: multiply;
-    opacity: 0.78;
-  }
+  #env-poster { opacity: 1; }
+  #env-video  { opacity: 0; }
 
   #env-hint {
     position: absolute;
@@ -794,6 +778,7 @@
     animation: fadeUp 0.8s ease 2s forwards;
     transition: opacity 0.3s;
     pointer-events: none;
+    z-index: 1;
   }
 </style>
 </head>
@@ -801,8 +786,8 @@
 
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
-  <img id="env-bg" src="envelope.jpg" alt="Enveloppe d'invitation">
-  <img id="env-logo-seal" src="logo.png" alt="Logo Y & A">
+  <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
+  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
@@ -1261,29 +1246,45 @@ viewport.addEventListener('touchend', function(e){
 
 resetAuto();
 
-// ENVELOPE : cache le site derrière pendant l'affichage
+// ENVELOPE : masque le site en arrière-plan
 document.getElementById('main-content').style.visibility = 'hidden';
 document.getElementById('main-content').style.opacity = '0';
 document.body.style.overflow = 'hidden';
 
+function revealSite() {
+  var overlay = document.getElementById('env-overlay');
+  overlay.classList.add('hide');
+  setTimeout(function() {
+    overlay.style.display = 'none';
+    var mc = document.getElementById('main-content');
+    mc.style.visibility = '';
+    mc.style.transition = 'opacity 0.7s ease';
+    mc.style.opacity = '1';
+    document.body.style.overflow = '';
+  }, 520);
+}
+
 function openEnvelope() {
   var overlay = document.getElementById('env-overlay');
+  var poster  = document.getElementById('env-poster');
+  var video   = document.getElementById('env-video');
   var hint    = document.getElementById('env-hint');
 
   overlay.removeEventListener('click', openEnvelope);
   hint.style.opacity = '0';
 
-  // L'enveloppe se plie vers l'arrière (comme un vrai rabat)
-  overlay.classList.add('open-envelope');
+  // Bascule vers la vidéo
+  poster.style.opacity = '0';
+  video.style.opacity  = '1';
+  video.play().catch(function() { revealSite(); });
 
-  // Révèle le site dès que l'animation est terminée
+  // Quand la vidéo se termine → révèle le site
+  video.addEventListener('ended', revealSite);
+
+  // Sécurité : fallback si la vidéo ne se lance pas dans les 8 secondes
   setTimeout(function() {
-    overlay.style.display = 'none';
-    document.getElementById('main-content').style.visibility = '';
-    document.getElementById('main-content').style.transition = 'opacity 0.6s ease';
-    document.getElementById('main-content').style.opacity = '1';
-    document.body.style.overflow = '';
-  }, 1700);
+    if (document.getElementById('env-overlay').style.display !== 'none') revealSite();
+  }, 8000);
 }
 
 document.getElementById('env-overlay').addEventListener('click', openEnvelope);
