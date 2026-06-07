@@ -722,11 +722,16 @@
     background: var(--cream);
   }
   footer .footer-names {
-    font-family: 'Jost', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 400;
-    font-style: normal;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    font-style: italic;
     color: var(--brown);
+  }
+  /* Esperluette en typo standard (pas le & calligraphie de la police) */
+  footer .footer-names .amp {
+    font-family: 'Jost', sans-serif;
+    font-style: normal;
   }
   footer p { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; }
 
@@ -1131,7 +1136,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-names">Anthony &amp; Yona</div>
+  <div class="footer-names">Anthony <span class="amp">&amp;</span> Yona</div>
   <p>5 · 07 · 2027</p>
   <p style="margin-top:0.5rem;font-size:0.72rem;opacity:0.6;">Avec tout notre amour ✦</p>
 </footer>
