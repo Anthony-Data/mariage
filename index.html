@@ -751,7 +751,7 @@
   }
   #env-overlay.hide { opacity: 0; pointer-events: none; }
 
-  #env-poster, #env-video {
+  #env-video {
     position: absolute;
     inset: 0;
     width: 100%; height: 100%;
@@ -760,8 +760,7 @@
     display: block;
     transition: opacity 80ms ease-out;
   }
-  #env-poster { opacity: 0; }
-  #env-video  { opacity: 1; }
+  #env-video { opacity: 1; }
 
   #env-hint {
     position: absolute;
@@ -784,8 +783,7 @@
 
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
-  <img id="env-poster" src="envelope.jpg" alt="Enveloppe" draggable="false">
-  <video id="env-video" src="envelope_open.mp4" poster="envelope.jpg" playsinline preload="auto"></video>
+  <video id="env-video" src="envelope_open.mp4" playsinline preload="auto"></video>
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
