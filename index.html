@@ -69,15 +69,18 @@
   nav a:hover { color: var(--brown); }
 
   /* LOGO in nav */
+  nav { overflow: visible; }
   .nav-logo {
     position: absolute;
-    left: 0.8rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26px;
-    height: 34px;
+    left: 1rem;
+    top: auto;
+    bottom: -24px;          /* descendu : il s'aligne sur le bas de la baniere et deborde legerement */
+    transform: none;
+    width: 62px;            /* nettement plus grand */
+    height: auto;
     object-fit: contain;
     opacity: 1;
+    filter: drop-shadow(0 2px 6px rgba(90,69,52,0.25));
   }
 
   /* HERO */
@@ -105,7 +108,14 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(245,240,232,0.55), rgba(245,240,232,0.45));
+    /* Halo creme concentre derriere le texte central pour le contraste,
+       tout en laissant la photo respirer sur les bords */
+    background:
+      radial-gradient(ellipse 85% 60% at 50% 46%,
+        rgba(245,240,232,0.88) 0%,
+        rgba(245,240,232,0.55) 55%,
+        rgba(245,240,232,0.35) 100%),
+      linear-gradient(to bottom, rgba(245,240,232,0.35), rgba(245,240,232,0.45));
   }
 
   .botanical { position: absolute; pointer-events: none; z-index: 1; }
@@ -141,8 +151,8 @@
     color: var(--brown);
     opacity: 0;
     animation: fadeUp 1s ease 0.5s forwards;
-    text-shadow: 0 2px 12px rgba(255,255,255,0.85), 0 4px 30px rgba(255,255,255,0.6);
-    -webkit-text-stroke: 0.3px rgba(90,69,52,0.3);
+    text-shadow: 0 1px 2px rgba(255,255,255,0.95), 0 2px 14px rgba(255,255,255,0.9), 0 4px 34px rgba(245,240,232,0.7);
+    -webkit-text-stroke: 0.4px rgba(90,69,52,0.4);
   }
   .hero-names span { color: var(--terracotta); font-style: normal; }
 
@@ -441,6 +451,62 @@
     transition: background 0.2s;
   }
   .hotel-link:hover { background: rgba(184,120,90,0.08); }
+
+  /* ===== HEBERGEMENTS — carrousel swipe ===== */
+  .heb-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+  }
+  .heb-track {
+    display: flex;
+    gap: 14px;
+    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    will-change: transform;
+  }
+  .hotel-slide {
+    min-width: 78vw;
+    max-width: 320px;
+    flex-shrink: 0;
+    background: var(--cream);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(90,69,52,0.10);
+  }
+  .hotel-photo {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    background: var(--sage-pale);
+    overflow: hidden;
+  }
+  .hotel-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hotel-photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--sage);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, var(--sage-pale), #dde5d3);
+  }
+  .hotel-body {
+    padding: 1.3rem 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
 
   /* PROGRAMME */
   .programme-days {
@@ -1031,45 +1097,84 @@
   <p class="section-tag">Pour se reposer</p>
   <h2 class="section-title">Hébergements proches</h2>
 
-  <div class="hebergement-grid">
+  <div class="heb-viewport">
+    <div class="heb-track" id="hebTrack">
 
-    <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Bairro Alto Hotel</p>
-      <span class="hotel-distance">🚗 ~45 min de la Quinta</span>
-      <p class="hotel-desc">Hôtel boutique iconique de Lisbonne avec vue panoramique sur la ville, terrasse et restaurant gastronomique. Élégance portugaise au sommet.</p>
-      <p class="hotel-price">À partir de 350 € / nuit</p>
-      <a href="https://www.bairroaltohotel.com" target="_blank" class="hotel-link">Réserver ↗</a>
+      <div class="hotel-slide">
+        <div class="hotel-photo">
+          <img src="hotel1.jpg" alt="Bairro Alto Hotel" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="hotel-photo-placeholder" style="display:none">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M10 21v-4h4v4"/></svg>
+            <span>Photo à venir</span>
+          </div>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="hotel-name">Bairro Alto Hotel</p>
+          <span class="hotel-distance">🚗 ~45 min de la Quinta</span>
+          <p class="hotel-desc">Hôtel boutique iconique de Lisbonne avec vue panoramique sur la ville, terrasse et restaurant gastronomique. Élégance portugaise au sommet.</p>
+          <p class="hotel-price">À partir de 350 € / nuit</p>
+          <a href="https://www.bairroaltohotel.com" target="_blank" rel="noopener" class="hotel-link">Réserver ↗</a>
+        </div>
+      </div>
+
+      <div class="hotel-slide">
+        <div class="hotel-photo">
+          <img src="hotel2.jpg" alt="Quinta da Bela Vista" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="hotel-photo-placeholder" style="display:none">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M10 21v-4h4v4"/></svg>
+            <span>Photo à venir</span>
+          </div>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="hotel-name">Quinta da Bela Vista</p>
+          <span class="hotel-distance">🚗 ~20 min de la Quinta</span>
+          <p class="hotel-desc">Manoir historique niché dans la nature, avec piscine et jardins romantiques. Ambiance intime et authentique, idéale pour un week-end de fête.</p>
+          <p class="hotel-price">À partir de 180 € / nuit</p>
+          <a href="https://www.belavistalisboa.com" target="_blank" rel="noopener" class="hotel-link">Réserver ↗</a>
+        </div>
+      </div>
+
+      <div class="hotel-slide">
+        <div class="hotel-photo">
+          <img src="hotel3.jpg" alt="Penha Longa Resort" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="hotel-photo-placeholder" style="display:none">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M10 21v-4h4v4"/></svg>
+            <span>Photo à venir</span>
+          </div>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="hotel-name">Penha Longa Resort</p>
+          <span class="hotel-distance">🚗 ~30 min de la Quinta</span>
+          <p class="hotel-desc">Resort luxueux au cœur de la Serra de Sintra, avec spa, golf et plusieurs restaurants. Un cadre naturel exceptionnel pour prolonger le week-end.</p>
+          <p class="hotel-price">À partir de 250 € / nuit</p>
+          <a href="https://www.penhalonga.com" target="_blank" rel="noopener" class="hotel-link">Réserver ↗</a>
+        </div>
+      </div>
+
+      <div class="hotel-slide">
+        <div class="hotel-photo">
+          <img src="hotel4.jpg" alt="Hotel Sintra Jardim" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="hotel-photo-placeholder" style="display:none">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7a8c6e" stroke-width="1.2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M10 21v-4h4v4"/></svg>
+            <span>Photo à venir</span>
+          </div>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-stars"><span>★</span><span>★</span><span>★</span></div>
+          <p class="hotel-name">Hotel Sintra Jardim</p>
+          <span class="hotel-distance">🚗 ~15 min de la Quinta</span>
+          <p class="hotel-desc">Option charmante et abordable au cœur de Sintra. Confortable, bien situé et à deux pas des sites classés UNESCO.</p>
+          <p class="hotel-price">À partir de 90 € / nuit</p>
+          <a href="https://www.sintrahotels.com" target="_blank" rel="noopener" class="hotel-link">Réserver ↗</a>
+        </div>
+      </div>
+
     </div>
-
-    <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Quinta da Bela Vista</p>
-      <span class="hotel-distance">🚗 ~20 min de la Quinta</span>
-      <p class="hotel-desc">Manoir historique niché dans la nature, avec piscine et jardins romantiques. Ambiance intime et authentique, idéale pour un week-end de fête.</p>
-      <p class="hotel-price">À partir de 180 € / nuit</p>
-      <a href="https://www.belavistalisboa.com" target="_blank" class="hotel-link">Réserver ↗</a>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Penha Longa Resort</p>
-      <span class="hotel-distance">🚗 ~30 min de la Quinta</span>
-      <p class="hotel-desc">Resort luxueux au cœur de la Serra de Sintra, avec spa, golf et plusieurs restaurants. Un cadre naturel exceptionnel pour prolonger le week-end.</p>
-      <p class="hotel-price">À partir de 250 € / nuit</p>
-      <a href="https://www.penhalonga.com" target="_blank" class="hotel-link">Réserver ↗</a>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-stars"><span>★</span><span>★</span><span>★</span></div>
-      <p class="hotel-name">Hotel Sintra Jardim</p>
-      <span class="hotel-distance">🚗 ~15 min de la Quinta</span>
-      <p class="hotel-desc">Option charmante et abordable au cœur de Sintra. Confortable, bien situé et à deux pas des sites classés UNESCO.</p>
-      <p class="hotel-price">À partir de 90 € / nuit</p>
-      <a href="https://www.sintrahotels.com" target="_blank" class="hotel-link">Réserver ↗</a>
-    </div>
-
   </div>
+  <div class="gallery-dots" id="hebDots"></div>
 </section>
 
 <!-- RSVP -->
@@ -1325,6 +1430,51 @@ function openEnvelope() {
 }
 
 envOverlay.addEventListener('click', openEnvelope);
+
+// ===== Carrousel HEBERGEMENTS (swipe + points) =====
+(function() {
+  var viewport = document.querySelector('.heb-viewport');
+  var track = document.getElementById('hebTrack');
+  if (!viewport || !track) return;
+  var dotsContainer = document.getElementById('hebDots');
+  var slides = track.querySelectorAll('.hotel-slide');
+  var current = 0, slideW = 0, gap = 14;
+  var startX = 0, startY = 0, swiping = false;
+
+  function computeW() { if (slides[0]) slideW = slides[0].offsetWidth; }
+  computeW();
+  window.addEventListener('resize', function(){ computeW(); goTo(current); });
+
+  slides.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', function(){ goTo(i); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(idx) {
+    current = Math.max(0, Math.min(idx, slides.length - 1));
+    computeW();
+    track.style.transform = 'translateX(-' + (current * (slideW + gap)) + 'px)';
+    dotsContainer.querySelectorAll('.gallery-dot').forEach(function(d, i){
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  viewport.addEventListener('touchstart', function(e){
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY; swiping = false;
+  }, {passive: true});
+  viewport.addEventListener('touchmove', function(e){
+    var dx = Math.abs(e.touches[0].clientX - startX);
+    var dy = Math.abs(e.touches[0].clientY - startY);
+    if (!swiping && dx > 8) swiping = true;
+    if (swiping && dx > dy) e.preventDefault();
+  }, {passive: false});
+  viewport.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - startX;
+    if (swiping && Math.abs(dx) > 30) goTo(current + (dx < 0 ? 1 : -1));
+  });
+})();
 </script>
 </body>
 </html>
