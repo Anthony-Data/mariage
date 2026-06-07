@@ -74,8 +74,8 @@
     left: 0.8rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 53px;
+    width: 26px;
+    height: 34px;
     object-fit: contain;
     opacity: 1;
   }
@@ -744,148 +744,63 @@
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #f2ede6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 1.5s cubic-bezier(0.4,0,0.2,1);
-  }
-  #env-overlay.fade-out { opacity: 0; pointer-events: none; }
-
-  .env-botanical-bg {
-    position: absolute;
-    pointer-events: none;
-    opacity: 0.45;
-  }
-  .env-botanical-tl { top: 0; left: 0; width: 180px; }
-  .env-botanical-br { bottom: 0; right: 0; width: 180px; transform: rotate(180deg); }
-
-  #env-scene {
+    background: #eeebe3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.8rem;
-    perspective: 1200px;
-    position: relative;
-    z-index: 1;
-  }
-
-  #env-wrap {
-    position: relative;
-    width: min(310px, 86vw);
-    height: min(210px, 58vw);
-    filter: drop-shadow(0 14px 44px rgba(90,69,52,0.22)) drop-shadow(0 4px 12px rgba(90,69,52,0.1));
-  }
-
-  #env-interior {
-    position: absolute;
-    inset: 2px;
-    border-radius: 3px;
-    background: linear-gradient(165deg, #f8f3ee 0%, #ece5dc 100%);
-  }
-
-  #env-body {
-    position: absolute;
-    inset: 0;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  #env-flap {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 70%;
-    transform-origin: top center;
-    transform-style: preserve-3d;
-    transition: transform 1.8s cubic-bezier(0.4,0,0.2,1);
-    z-index: 3;
-  }
-  #env-flap.open { transform: rotateX(-186deg); }
-
-  #env-flap-front {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-  #env-flap-back {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform: rotateX(180deg);
-    background: linear-gradient(170deg, #e2d9cf 0%, #cfc6bb 100%);
-    clip-path: polygon(0 0, 100% 0, 50% 97%);
-  }
-
-  #env-seal {
-    position: absolute;
-    width: 70px; height: 70px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 38% 34%, #cd8565 0%, #7c3f1c 100%);
-    left: 50%;
-    top: calc(68% - 35px);
-    transform: translateX(-50%);
-    z-index: 10;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    box-shadow:
-      0 4px 14px rgba(90,69,52,0.45),
-      inset 0 1px 5px rgba(255,255,255,0.2),
-      0 0 0 2.5px rgba(120,60,25,0.35);
-    transition: transform 0.25s ease, opacity 0.9s ease, box-shadow 0.25s;
-    animation: sealPulse 3.2s ease-in-out infinite;
+    gap: 2.5rem;
+    overflow: hidden;
+    transition: transform 1.4s cubic-bezier(0.4,0,0.6,1);
+    transform-origin: top center;
   }
-  #env-seal:hover {
-    transform: translateX(-50%) scale(1.07);
-    animation: none;
-    box-shadow: 0 6px 24px rgba(90,69,52,0.5), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 2.5px rgba(120,60,25,0.35);
-  }
-  #env-seal:active { transform: translateX(-50%) scale(0.92) !important; }
-  #env-seal.seal-opened {
-    opacity: 0 !important;
-    transform: translateX(-50%) scale(0.6) !important;
-    pointer-events: none;
-    animation: none !important;
-  }
+  #env-overlay.open-up { transform: translateY(-100%); }
 
-  @keyframes sealPulse {
-    0%,100% { box-shadow: 0 4px 14px rgba(90,69,52,0.45), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 0 rgba(184,120,90,0.6); }
-    55%     { box-shadow: 0 4px 14px rgba(90,69,52,0.45), inset 0 1px 5px rgba(255,255,255,0.2), 0 0 0 13px rgba(184,120,90,0); }
-  }
-
-  .seal-monogram {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    color: rgba(248,243,238,0.93);
-    display: flex;
-    align-items: center;
-    gap: 1px;
-    pointer-events: none;
-    position: relative;
-    z-index: 1;
-  }
-  .seal-monogram span { font-size: 20px; font-weight: 300; line-height: 1; }
-  .seal-monogram em   { font-size: 13px; font-style: italic; font-weight: 300; line-height: 1; }
-
-  .seal-ring {
+  #env-fold-svg {
     position: absolute;
-    inset: 7px;
-    border-radius: 50%;
-    border: 0.8px solid rgba(248,243,238,0.22);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
+  }
+
+  #env-seal-wrap {
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    transition: transform 0.18s ease;
+  }
+  #env-seal-wrap:active { transform: scale(0.95); }
+
+  #env-seal-svg {
+    width: 175px;
+    height: 175px;
+    display: block;
+    filter: drop-shadow(0 10px 32px rgba(100,72,18,0.52)) drop-shadow(0 3px 10px rgba(100,72,18,0.28));
+    animation: sealBreath 4s ease-in-out infinite;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  #env-seal-svg.gone {
+    opacity: 0;
+    transform: scale(0.5);
+    animation: none;
+  }
+  @keyframes sealBreath {
+    0%,100% { filter: drop-shadow(0 10px 32px rgba(100,72,18,0.52)) drop-shadow(0 3px 10px rgba(100,72,18,0.28)); }
+    50%      { filter: drop-shadow(0 15px 44px rgba(100,72,18,0.68)) drop-shadow(0 5px 16px rgba(100,72,18,0.4)); }
   }
 
   #env-hint {
     font-family: 'Jost', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: var(--sage);
+    color: rgba(90,69,52,0.48);
     opacity: 0;
-    animation: fadeUp 0.8s ease 1.6s forwards;
+    animation: fadeUp 0.8s ease 2.2s forwards;
     text-align: center;
+    z-index: 2;
+    transition: opacity 0.3s;
   }
 </style>
 </head>
@@ -894,72 +809,99 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
 
-  <!-- Botaniques de fond -->
-  <svg class="env-botanical-bg env-botanical-tl" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" stroke="#7a8c6e" stroke-width="1.1">
-      <path d="M15,175 C38,132 72,88 115,58 C140,40 165,26 198,12"/>
-      <path d="M115,58 C90,50 66,48 44,56"/>
-      <path d="M145,38 C128,32 108,31 90,37"/>
-      <ellipse cx="40" cy="55" rx="17" ry="7" transform="rotate(-22 40 55)" fill="#b5c4a5" stroke="none" opacity="0.7"/>
-      <ellipse cx="88" cy="36" rx="15" ry="6" transform="rotate(-10 88 36)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
-      <ellipse cx="198" cy="12" rx="12" ry="5" transform="rotate(5 198 12)" fill="#b5c4a5" stroke="none" opacity="0.55"/>
-      <circle cx="168" cy="22" r="3.5" fill="#b8785a" stroke="none" opacity="0.55"/>
-      <circle cx="160" cy="14" r="2.5" fill="#b8785a" stroke="none" opacity="0.45"/>
-      <circle cx="175" cy="14" r="2" fill="#b8785a" stroke="none" opacity="0.4"/>
-    </g>
-  </svg>
-  <svg class="env-botanical-bg env-botanical-br" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" stroke="#7a8c6e" stroke-width="1.1">
-      <path d="M15,175 C38,132 72,88 115,58 C140,40 165,26 198,12"/>
-      <path d="M115,58 C90,50 66,48 44,56"/>
-      <path d="M145,38 C128,32 108,31 90,37"/>
-      <ellipse cx="40" cy="55" rx="17" ry="7" transform="rotate(-22 40 55)" fill="#b5c4a5" stroke="none" opacity="0.7"/>
-      <ellipse cx="88" cy="36" rx="15" ry="6" transform="rotate(-10 88 36)" fill="#b5c4a5" stroke="none" opacity="0.6"/>
-      <ellipse cx="198" cy="12" rx="12" ry="5" transform="rotate(5 198 12)" fill="#b5c4a5" stroke="none" opacity="0.55"/>
-    </g>
+  <!-- Lignes de plis du papier (diagonales des coins vers le centre) -->
+  <svg id="env-fold-svg" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0"   y1="0"   x2="50" y2="50" stroke="rgba(100,80,50,0.13)" stroke-width="0.22"/>
+    <line x1="0.4" y1="0"   x2="50.4" y2="50" stroke="rgba(255,248,235,0.08)" stroke-width="0.1"/>
+    <line x1="100" y1="0"   x2="50" y2="50" stroke="rgba(100,80,50,0.13)" stroke-width="0.22"/>
+    <line x1="99.6" y1="0"  x2="49.6" y2="50" stroke="rgba(255,248,235,0.08)" stroke-width="0.1"/>
+    <line x1="0"   y1="100" x2="50" y2="50" stroke="rgba(100,80,50,0.09)" stroke-width="0.18"/>
+    <line x1="100" y1="100" x2="50" y2="50" stroke="rgba(100,80,50,0.09)" stroke-width="0.18"/>
   </svg>
 
-  <div id="env-scene">
-    <div id="env-wrap">
+  <!-- Grand sceau de cire baroque (cliquable) -->
+  <div id="env-seal-wrap" onclick="openEnvelope()">
+    <svg id="env-seal-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="waxGrad" cx="38%" cy="30%" r="68%">
+          <stop offset="0%"   stop-color="#f4e6c0"/>
+          <stop offset="28%"  stop-color="#daba7a"/>
+          <stop offset="68%"  stop-color="#ba9252"/>
+          <stop offset="100%" stop-color="#8e6a22"/>
+        </radialGradient>
+      </defs>
 
-      <!-- Intérieur (visible quand le rabat s'ouvre) -->
-      <div id="env-interior"></div>
+      <!-- Disque de cire avec légère irrégularité -->
+      <circle cx="100" cy="100" r="97" fill="url(#waxGrad)"/>
 
-      <!-- Corps enveloppe avec plis -->
-      <div id="env-body">
-        <svg width="100%" height="100%" viewBox="0 0 310 210" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <rect width="310" height="210" fill="#e8dfd4"/>
-          <path d="M0,0 L0,210 L155,115 Z" fill="rgba(90,69,52,0.07)"/>
-          <path d="M310,0 L310,210 L155,115 Z" fill="rgba(90,69,52,0.04)"/>
-          <path d="M0,210 L310,210 L155,115 Z" fill="rgba(90,69,52,0.11)"/>
-          <line x1="0" y1="210" x2="155" y2="115" stroke="rgba(90,69,52,0.2)" stroke-width="0.6"/>
-          <line x1="310" y1="210" x2="155" y2="115" stroke="rgba(90,69,52,0.2)" stroke-width="0.6"/>
-        </svg>
-      </div>
+      <!-- Anneaux extérieurs gravés -->
+      <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(125,88,24,0.4)"  stroke-width="2.4"/>
+      <circle cx="100" cy="100" r="87" fill="none" stroke="rgba(175,138,58,0.2)" stroke-width="1"/>
 
-      <!-- Rabat supérieur -->
-      <div id="env-flap">
-        <div id="env-flap-front">
-          <svg width="100%" height="100%" viewBox="0 0 310 148" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0,0 L310,0 L155,143 Z" fill="#ddd3c5"/>
-            <path d="M1,1 L309,1 L155,142 Z" fill="none" stroke="rgba(90,69,52,0.1)" stroke-width="0.8"/>
-          </svg>
-        </div>
-        <div id="env-flap-back"></div>
-      </div>
+      <!-- ── ORNEMENT HAUT : baies + couronne ── -->
+      <circle cx="100" cy="11"  r="4.5" fill="rgba(125,88,24,0.44)"/>
+      <circle cx="83"  cy="17"  r="3.2" fill="rgba(125,88,24,0.34)"/>
+      <circle cx="117" cy="17"  r="3.2" fill="rgba(125,88,24,0.34)"/>
+      <circle cx="71"  cy="27"  r="2.4" fill="rgba(125,88,24,0.26)"/>
+      <circle cx="129" cy="27"  r="2.4" fill="rgba(125,88,24,0.26)"/>
+      <!-- Arche principale -->
+      <path d="M64,47 Q75,29 100,27 Q125,29 136,47"
+            fill="none" stroke="rgba(115,80,18,0.5)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M70,52 Q82,36 100,34 Q118,36 130,52"
+            fill="none" stroke="rgba(115,80,18,0.28)" stroke-width="1.1" stroke-linecap="round"/>
+      <!-- Pointes latérales de couronne -->
+      <line x1="64"  y1="47" x2="58"  y2="37" stroke="rgba(115,80,18,0.44)" stroke-width="2"   stroke-linecap="round"/>
+      <line x1="136" y1="47" x2="142" y2="37" stroke="rgba(115,80,18,0.44)" stroke-width="2"   stroke-linecap="round"/>
+      <circle cx="57"  cy="35" r="3.2" fill="rgba(115,80,18,0.44)"/>
+      <circle cx="143" cy="35" r="3.2" fill="rgba(115,80,18,0.44)"/>
 
-      <!-- Sceau de cire avec monogramme -->
-      <div id="env-seal" onclick="openEnvelope()">
-        <div class="seal-monogram">
-          <span>Y</span><em>&amp;</em><span>A</span>
-        </div>
-        <div class="seal-ring"></div>
-      </div>
+      <!-- ── ÉLÉMENTS LATÉRAUX ── -->
+      <path d="M14,83 Q8,100 14,117"  fill="none" stroke="rgba(115,80,18,0.38)" stroke-width="2"   stroke-linecap="round"/>
+      <path d="M186,83 Q192,100 186,117" fill="none" stroke="rgba(115,80,18,0.38)" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="10"  cy="100" r="3.8" fill="rgba(115,80,18,0.36)"/>
+      <circle cx="190" cy="100" r="3.8" fill="rgba(115,80,18,0.36)"/>
 
-    </div>
+      <!-- ── CARTOUCHE OVALE PRINCIPAL ── -->
+      <ellipse cx="100" cy="100" rx="63" ry="71"
+               fill="none" stroke="rgba(115,80,18,0.52)" stroke-width="2.6"/>
+      <ellipse cx="100" cy="100" rx="58" ry="66"
+               fill="none" stroke="rgba(165,125,55,0.22)" stroke-width="1.1"/>
+      <!-- Barres ornementales du cartouche -->
+      <path d="M79,30  Q100,25 121,30"  fill="none" stroke="rgba(115,80,18,0.44)" stroke-width="1.8"/>
+      <path d="M79,170 Q100,175 121,170" fill="none" stroke="rgba(115,80,18,0.44)" stroke-width="1.8"/>
 
-    <p id="env-hint">Appuyez sur le sceau pour ouvrir</p>
+      <!-- ── ORNEMENT BAS : scroll + baies ── -->
+      <path d="M64,153 Q75,171 100,169 Q125,171 136,153"
+            fill="none" stroke="rgba(115,80,18,0.48)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M70,149 Q100,162 130,149"
+            fill="none" stroke="rgba(115,80,18,0.26)" stroke-width="1.1" stroke-linecap="round"/>
+      <line x1="64"  y1="153" x2="58"  y2="163" stroke="rgba(115,80,18,0.42)" stroke-width="2"   stroke-linecap="round"/>
+      <line x1="136" y1="153" x2="142" y2="163" stroke="rgba(115,80,18,0.42)" stroke-width="2"   stroke-linecap="round"/>
+      <circle cx="57"  cy="165" r="3.2" fill="rgba(115,80,18,0.42)"/>
+      <circle cx="143" cy="165" r="3.2" fill="rgba(115,80,18,0.42)"/>
+      <circle cx="100" cy="189" r="4.5" fill="rgba(125,88,24,0.44)"/>
+      <circle cx="83"  cy="183" r="3.2" fill="rgba(125,88,24,0.34)"/>
+      <circle cx="117" cy="183" r="3.2" fill="rgba(125,88,24,0.34)"/>
+      <circle cx="71"  cy="173" r="2.4" fill="rgba(125,88,24,0.26)"/>
+      <circle cx="129" cy="173" r="2.4" fill="rgba(125,88,24,0.26)"/>
+
+      <!-- ── MONOGRAMME Y & A ── -->
+      <text x="66"  y="106"
+            font-family="'Cormorant Garamond', Georgia, serif"
+            font-size="54" font-weight="300" font-style="italic"
+            fill="rgba(90,58,12,0.72)" text-anchor="middle" dominant-baseline="middle">Y</text>
+      <text x="100" y="115"
+            font-family="'Cormorant Garamond', Georgia, serif"
+            font-size="28" font-weight="300" font-style="italic"
+            fill="rgba(90,58,12,0.60)" text-anchor="middle" dominant-baseline="middle">&amp;</text>
+      <text x="134" y="106"
+            font-family="'Cormorant Garamond', Georgia, serif"
+            font-size="54" font-weight="300" font-style="italic"
+            fill="rgba(90,58,12,0.72)" text-anchor="middle" dominant-baseline="middle">A</text>
+    </svg>
   </div>
+
+  <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
 <!-- DESKTOP BLOCK -->
@@ -1419,28 +1361,28 @@ resetAuto();
 
 // ENVELOPE ANIMATION
 function openEnvelope() {
-  var seal    = document.getElementById('env-seal');
-  var flap    = document.getElementById('env-flap');
-  var overlay = document.getElementById('env-overlay');
-  var hint    = document.getElementById('env-hint');
+  var sealWrap = document.getElementById('env-seal-wrap');
+  var sealSvg  = document.getElementById('env-seal-svg');
+  var overlay  = document.getElementById('env-overlay');
+  var hint     = document.getElementById('env-hint');
 
-  seal.onclick = null; // évite le double-clic
+  sealWrap.onclick = null; // évite le double-clic
 
-  // Masque le hint immédiatement
-  hint.style.transition = 'opacity 0.4s';
+  // Masque le hint
   hint.style.opacity = '0';
 
-  // Ouvre le rabat (légèr délai pour la réactivité tactile)
-  setTimeout(function() { flap.classList.add('open'); }, 180);
+  // Le sceau rétrécit et disparaît
+  sealSvg.classList.add('gone');
 
-  // Dissout le sceau
-  setTimeout(function() { seal.classList.add('seal-opened'); }, 1000);
+  // L'overlay remonte comme un rabat d'enveloppe qu'on soulève
+  setTimeout(function() {
+    overlay.classList.add('open-up');
+  }, 750);
 
-  // Fondu sortant de l'overlay
-  setTimeout(function() { overlay.classList.add('fade-out'); }, 2500);
-
-  // Retire l'overlay du rendu
-  setTimeout(function() { overlay.style.display = 'none'; }, 4200);
+  // Retire l'overlay du DOM
+  setTimeout(function() {
+    overlay.style.display = 'none';
+  }, 2300);
 }
 </script>
 </body>
