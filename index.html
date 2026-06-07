@@ -761,22 +761,6 @@
     transition: opacity 80ms ease-out;
   }
   #env-video { opacity: 1; }
-
-  #env-hint {
-    position: absolute;
-    bottom: 20%;
-    left: 0; right: 0;
-    text-align: center;
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 22px;
-    font-style: italic;
-    letter-spacing: 0.1em;
-    color: rgba(155, 30, 30, 0.88);
-    opacity: 1;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 5;
-  }
 </style>
 </head>
 <body>
@@ -784,7 +768,6 @@
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
   <video id="env-video" src="envelope_open.mp4" poster="video_poster.jpg" playsinline preload="auto"></video>
-  <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
 <!-- DESKTOP BLOCK -->
@@ -1262,11 +1245,9 @@ function revealSite() {
 
 var envVideo   = document.getElementById('env-video');
 var envOverlay = document.getElementById('env-overlay');
-var envHint    = document.getElementById('env-hint');
 
 function openEnvelope() {
   envOverlay.removeEventListener('click', openEnvelope);
-  envHint.style.opacity = '0';
   envVideo.play().catch(function() { revealSite(); });
   envVideo.addEventListener('ended', revealSite);
 }
