@@ -809,9 +809,23 @@
   .gift-btn:hover { background: rgba(90,69,52,0.06); }
 
   /* Fenetre Wero */
-  #weroModal .dress-modal-card { max-width: 380px; }
-  .wero-name { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
-  .wero-name strong { color: var(--brown); font-weight: 400; }
+  #weroModal .dress-modal-card {
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .pay-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.3rem;
+  }
+  .pay-label.second {
+    margin-top: 1.4rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(122,140,110,0.2);
+  }
   .wero-number {
     display: flex;
     align-items: center;
@@ -820,9 +834,14 @@
     background: white;
     border: 1px solid rgba(90,69,52,0.15);
     border-radius: 14px;
-    padding: 0.7rem 0.7rem 0.7rem 1.1rem;
+    padding: 0.6rem 0.7rem 0.6rem 1.1rem;
+    margin-bottom: 0.6rem;
+    text-align: left;
   }
-  .wero-number span { font-size: 1.15rem; letter-spacing: 0.08em; color: var(--text); }
+  .wero-number small { display: block; font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
+  .wero-number span { font-size: 1.1rem; letter-spacing: 0.08em; color: var(--text); }
+  .wero-number.iban span { font-size: 0.82rem; letter-spacing: 0.04em; }
+  .wero-number .nb { white-space: nowrap; }
   .wero-copy {
     border: none;
     border-radius: 100px;
@@ -835,9 +854,12 @@
     cursor: pointer;
     white-space: nowrap;
   }
-  .wero-steps { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin: 0.8rem 0 1.2rem; }
-  .wero-qr img { width: 190px; max-width: 70%; display: block; margin: 0 auto 0.5rem; }
+  .wero-steps { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin: 0 0 0.9rem; }
+  /* Le QR code ne sert que sur PC (un telephone ne peut pas scanner son propre ecran) */
+  .wero-qr { display: none; margin-top: 0.6rem; }
+  .wero-qr img { width: 170px; max-width: 70%; display: block; margin: 0 auto 0.5rem; }
   .wero-qr p { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+  @media (min-width: 768px) { .wero-qr { display: block; } }
 
   /* RSVP */
   .rsvp-section {
@@ -1496,24 +1518,36 @@
 <!-- CAGNOTTE (mention discrete, a titre informatif) -->
 <section class="gift-note">
   <p>Pour tous ceux qui nous l'ont demandé, une urne sera présente sur place.<br>
-  Il est aussi possible de participer à distance via Wero.</p>
-  <button class="gift-btn" id="weroOpen">Participer via Wero</button>
+  Il est aussi possible de participer à distance, via Wero ou par virement.</p>
+  <button class="gift-btn" id="weroOpen">Participer à distance</button>
 </section>
 
 <!-- Fenetre Wero : numero a copier + QR code -->
 <div id="weroModal" role="dialog" aria-modal="true" aria-labelledby="weroModalTitle">
   <div class="dress-modal-card">
     <button class="dress-modal-close" id="weroModalClose" aria-label="Fermer">×</button>
-    <p class="dress-modal-title" id="weroModalTitle">Wero</p>
-    <p class="wero-name">Bénéficiaire : <strong>Anthony Dubois</strong></p>
+    <p class="dress-modal-title" id="weroModalTitle">Participer à distance</p>
+
+    <p class="pay-label">Par Wero</p>
+    <p class="wero-steps">Ouvrez l'application de votre banque, rubrique <em>Wero</em>,<br>puis envoyez à l'un de ces numéros.</p>
     <div class="wero-number">
-      <span>07 77 38 27 06</span>
-      <button class="wero-copy" id="weroCopy" data-number="0777382706">Copier</button>
+      <div><small>Anthony Dubois</small><span>07 77 38 27 06</span></div>
+      <button class="wero-copy" data-copy="0777382706">Copier</button>
     </div>
-    <p class="wero-steps">Ouvrez l'application de votre banque, rubrique <em>Wero</em>,<br>puis envoyez à ce numéro.</p>
+    <div class="wero-number">
+      <div><small>Yona</small><span>06 73 39 79 28</span></div>
+      <button class="wero-copy" data-copy="0673397928">Copier</button>
+    </div>
     <div class="wero-qr">
       <img src="images/wero-qr.png" alt="QR code Wero d'Anthony Dubois">
-      <p>Ou scannez ce QR code depuis l'application de votre banque</p>
+      <p>Ou scannez le QR code d'Anthony depuis l'application de votre banque</p>
+    </div>
+
+    <p class="pay-label second">Par virement bancaire</p>
+    <p class="wero-steps">Pour un montant plus important, ou si votre banque ne propose pas Wero.</p>
+    <div class="wero-number iban">
+      <div><small>IBAN · compte joint Anthony &amp; Yona</small><span><span class="nb">FR76 1027 8060 0600</span> <span class="nb">0212 9600 168</span></span></div>
+      <button class="wero-copy" data-copy="FR7610278060060002129600168">Copier</button>
     </div>
   </div>
 </div>
@@ -1822,35 +1856,38 @@ envOverlay.addEventListener('click', openEnvelope);
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
 })();
 
-// ===== WERO : fenetre avec numero a copier =====
+// ===== WERO / VIREMENT : fenetre avec numeros et IBAN a copier =====
 (function() {
   var modal = document.getElementById('weroModal');
-  var copyBtn = document.getElementById('weroCopy');
+  var copyBtns = modal.querySelectorAll('.wero-copy');
   document.getElementById('weroOpen').addEventListener('click', function() { modal.classList.add('open'); });
-  function close() { modal.classList.remove('open'); copyBtn.textContent = 'Copier'; }
+  function resetBtns() { copyBtns.forEach(function(b) { b.textContent = 'Copier'; }); }
+  function close() { modal.classList.remove('open'); resetBtns(); }
   document.getElementById('weroModalClose').addEventListener('click', close);
   modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
 
-  copyBtn.addEventListener('click', function() {
-    var number = copyBtn.getAttribute('data-number');
-    function done() { copyBtn.textContent = 'Copié ✓'; }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(number).then(done, fallback);
-    } else {
-      fallback();
-    }
-    // Pour les navigateurs sans acces au presse-papiers moderne
-    function fallback() {
-      var t = document.createElement('textarea');
-      t.value = number;
-      t.setAttribute('readonly', '');
-      t.style.position = 'fixed'; t.style.opacity = '0';
-      document.body.appendChild(t);
-      t.select();
-      try { document.execCommand('copy'); done(); } catch (e) {}
-      document.body.removeChild(t);
-    }
+  copyBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var value = btn.getAttribute('data-copy');
+      function done() { resetBtns(); btn.textContent = 'Copié ✓'; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done, fallback);
+      } else {
+        fallback();
+      }
+      // Pour les navigateurs sans acces au presse-papiers moderne
+      function fallback() {
+        var t = document.createElement('textarea');
+        t.value = value;
+        t.setAttribute('readonly', '');
+        t.style.position = 'fixed'; t.style.opacity = '0';
+        document.body.appendChild(t);
+        t.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(t);
+      }
+    });
   });
 })();
 
