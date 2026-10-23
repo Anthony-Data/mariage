@@ -29,7 +29,7 @@
     overflow-x: hidden;
   }
 
-  /* DESKTOP BLOCK */
+  /* DESKTOP BLOCK (desactive : site accessible sur PC)
   #desktop-block {
     display: none;
     height: 100vh;
@@ -43,6 +43,7 @@
   }
   #desktop-block h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--brown); }
   #desktop-block p { color: var(--muted); font-size: 0.95rem; }
+  */
 
   /* NAV */
   nav {
@@ -873,11 +874,12 @@
   <p id="env-hint">Appuyez pour ouvrir</p>
 </div>
 
-<!-- DESKTOP BLOCK -->
+<!-- DESKTOP BLOCK (desactive : site accessible sur PC)
 <div id="desktop-block">
   <h1>Accès réservé mobile 📱</h1>
   <p>Ce site est uniquement accessible sur téléphone.</p>
 </div>
+-->
 
 <!-- MAIN (mobile) -->
 <div id="main-content">
@@ -1249,15 +1251,15 @@
 </div>
 
 <script>
-// MOBILE DETECTION
-function isMobile() {
-  return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-}
-if (!isMobile()) {
-  document.getElementById('main-content').style.display = 'none';
-  document.getElementById('desktop-block').style.display = 'flex';
-  document.getElementById('env-overlay').style.display = 'none';
-}
+// MOBILE DETECTION (desactive : site accessible sur PC)
+// function isMobile() {
+//   return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+// }
+// if (!isMobile()) {
+//   document.getElementById('main-content').style.display = 'none';
+//   document.getElementById('desktop-block').style.display = 'flex';
+//   document.getElementById('env-overlay').style.display = 'none';
+// }
 
 // COUNTDOWN
 var wedding = new Date('2027-07-05T15:30:00');
