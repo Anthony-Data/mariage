@@ -863,6 +863,74 @@
     transition: opacity 0.6s ease;
   }
   #env-hint.show { opacity: 1; }
+
+  .gallery-arrow { display: none; }
+
+  /* ===== ADAPTATION PC / TABLETTE (ecrans larges) ===== */
+  @media (min-width: 768px) {
+    /* Intro : la video verticale est affichee en entier, sans etirement,
+       sur un fond de la couleur de l'enveloppe */
+    #env-overlay { background: #ebe4d9; }
+    #env-video, #env-poster { object-fit: contain; }
+
+    /* Accueil : photo de couverture visible en entier, sur un fond flou
+       de la meme photo pour remplir les cotes */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: url('images/photo_couverture.jpg') center / cover no-repeat;
+      filter: blur(28px);
+      z-index: 0;
+    }
+    .hero-bg { background-size: contain; }
+
+    /* Galerie : photos entieres (format portrait), la photo active au centre */
+    .gallery-viewport { position: relative; padding: 0; }
+    .gallery-slide {
+      min-width: 0;
+      max-width: none;
+      height: min(62vh, 540px);
+      max-height: none;
+      width: calc(min(62vh, 540px) * 2 / 3);
+      opacity: 0.45;
+      transition: opacity 0.6s ease;
+    }
+    .gallery-slide.active { opacity: 1; }
+    .gallery-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(122,140,110,0.3);
+      background: rgba(245,240,232,0.9);
+      color: var(--brown);
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(90,69,52,0.12);
+      transition: background 0.3s;
+    }
+    .gallery-arrow:hover { background: var(--cream); }
+    .gallery-arrow.prev { left: 24px; }
+    .gallery-arrow.next { right: 24px; }
+
+    /* Hebergements : toutes les cartes visibles cote a cote, plus de carrousel */
+    .heb-viewport { padding: 0 2rem; }
+    .heb-track {
+      transform: none !important;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .hotel-slide { min-width: 0; width: 300px; max-width: none; }
+    #hebDots { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -1236,6 +1304,8 @@
         </div>
       </div>
     </div>
+    <button class="gallery-arrow prev" id="galleryPrev" aria-label="Photo précédente">‹</button>
+    <button class="gallery-arrow next" id="galleryNext" aria-label="Photo suivante">›</button>
   </div>
 
   <div class="gallery-dots" id="galleryDots"></div>
@@ -1320,8 +1390,10 @@ var isSwiping = false;
 function computeSlideW() {
   if (slides[0]) slideW = slides[0].offsetWidth;
 }
+var wideScreen = window.matchMedia('(min-width: 768px)');
+
 computeSlideW();
-window.addEventListener('resize', computeSlideW);
+window.addEventListener('resize', function(){ computeSlideW(); goTo(current); });
 
 slides.forEach(function(_, i) {
   var dot = document.createElement('div');
@@ -1333,11 +1405,23 @@ slides.forEach(function(_, i) {
 function goTo(idx) {
   current = Math.max(0, Math.min(idx, slides.length - 1));
   computeSlideW();
-  track.style.transform = 'translateX(-' + (current * (slideW + gap)) + 'px)';
-  document.querySelectorAll('.gallery-dot').forEach(function(d, i){
+  var shift = current * (slideW + gap);
+  // Sur PC, la photo active est centree a l'ecran
+  if (wideScreen.matches) shift -= (viewport.clientWidth - slideW) / 2;
+  track.style.transform = 'translateX(' + (-shift) + 'px)';
+  slides.forEach(function(s, i){ s.classList.toggle('active', i === current); });
+  dotsContainer.querySelectorAll('.gallery-dot').forEach(function(d, i){
     d.classList.toggle('active', i === current);
   });
 }
+goTo(0);
+
+document.getElementById('galleryPrev').addEventListener('click', function(){
+  goTo(current > 0 ? current - 1 : slides.length - 1); resetAuto();
+});
+document.getElementById('galleryNext').addEventListener('click', function(){
+  goTo(current < slides.length - 1 ? current + 1 : 0); resetAuto();
+});
 
 function resetAuto() {
   clearInterval(autoTimer);
