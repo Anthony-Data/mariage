@@ -658,16 +658,20 @@
   }
 
   /* Couleurs a eviter : pastilles barrees */
+  /* 5 colonnes de meme largeur : espacement identique entre les pastilles */
   .dress-avoid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 380px;
+    margin: 0 auto;
+    gap: 6px;
   }
   .dress-avoid-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    line-height: 1.3;
     gap: 6px;
     font-size: 0.74rem;
     font-weight: 400;
@@ -1315,7 +1319,7 @@
       <button class="dress-swatch" style="background:#e07a2f" data-name="Orange" data-slug="orange" aria-label="Orange"></button>
       <button class="dress-swatch" style="background:#c0392b" data-name="Rouge" data-slug="rouge" aria-label="Rouge"></button>
       <button class="dress-swatch" style="background:#7b1e3a" data-name="Bordeaux" data-slug="bordeaux" aria-label="Bordeaux"></button>
-      <button class="dress-swatch" style="background:#2c4fa3" data-name="Bleu roi" data-slug="bleu" aria-label="Bleu roi"></button>
+      <button class="dress-swatch" style="background:#4a7fd4" data-name="Bleu" data-slug="bleu" aria-label="Bleu"></button>
       <button class="dress-swatch" style="background:#6c3d91" data-name="Violet" data-slug="violet" aria-label="Violet"></button>
     </div>
     <p class="dress-hint">Touchez une couleur pour découvrir une idée de robe et de costume</p>
@@ -1442,6 +1446,14 @@
   </div>
 </section>
 
+<!-- CAGNOTTE (mention discrete, a titre informatif) -->
+<!-- Quand le lien (cagnotte ou Wero) sera choisi, remplacer la 2e phrase par :
+     Sinon, vous pouvez aussi passer par <a href="LIEN">notre cagnotte en ligne</a>. -->
+<section class="gift-note">
+  <p>Pour tous ceux qui nous l'ont demandé, une urne sera présente sur place.<br>
+  Une cagnotte en ligne sera également disponible : le lien sera partagé ici prochainement.</p>
+</section>
+
 <!-- GALERIE — compact cards with peek -->
 <section class="gallery-section" id="galerie">
   <div class="gallery-header">
@@ -1491,12 +1503,6 @@
   </div>
 
   <div class="gallery-dots" id="galleryDots"></div>
-</section>
-
-<!-- CAGNOTTE (mention discrete, a titre informatif) -->
-<section class="gift-note">
-  <p>Votre présence à nos côtés est le plus beau des cadeaux.<br>
-  Pour celles et ceux qui le souhaiteraient, une cagnotte sera également à disposition.</p>
 </section>
 
 <!-- FOOTER -->
