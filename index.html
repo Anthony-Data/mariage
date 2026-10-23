@@ -668,23 +668,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    font-size: 0.68rem;
-    color: var(--muted);
+    gap: 6px;
+    font-size: 0.74rem;
+    font-weight: 400;
+    color: var(--brown);
   }
   .dress-avoid-dot {
     position: relative;
-    width: 22px; height: 22px;
+    width: 32px; height: 32px;
     border-radius: 50%;
-    border: 1px solid rgba(90,69,52,0.25);
+    border: 1px solid rgba(90,69,52,0.3);
   }
   .dress-avoid-dot::after {
     content: '';
     position: absolute;
-    left: 50%; top: -3px; bottom: -3px;
-    width: 1.5px;
-    background: #8e564c;
+    left: 50%; top: -5px; bottom: -5px;
+    width: 2.5px;
+    margin-left: -1px;
+    background: #b3261e;
+    border-radius: 2px;
     transform: rotate(45deg);
+  }
+
+  /* Encadre des couleurs interdites, bien visible */
+  .dress-forbidden {
+    width: 100%;
+    background: rgba(179,38,30,0.06);
+    border: 1px solid rgba(179,38,30,0.35);
+    border-radius: 16px;
+    padding: 1.1rem 0.8rem 1.2rem;
+  }
+  .dress-forbidden-title {
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #b3261e;
+    margin-bottom: 0.9rem;
   }
 
   /* Fenetre d'inspiration robe / costume */
@@ -1299,8 +1319,8 @@
       <button class="dress-swatch" style="background:#6c3d91" data-name="Violet" data-slug="violet" aria-label="Violet"></button>
     </div>
     <p class="dress-hint">Touchez une couleur pour découvrir une idée de robe et de costume</p>
-    <div class="dress-note">
-      <p style="margin-bottom:0.8rem;">Merci d'éviter ces couleurs :</p>
+    <div class="dress-forbidden">
+      <p class="dress-forbidden-title">✕ Couleurs interdites ✕</p>
       <div class="dress-avoid">
         <span class="dress-avoid-item"><span class="dress-avoid-dot" style="background:#ffffff"></span>Blanc</span>
         <span class="dress-avoid-item"><span class="dress-avoid-dot" style="background:#efe4cf"></span>Beige / crème</span>
