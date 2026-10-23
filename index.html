@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Site prive : pas d'indexation par Google et les autres moteurs -->
+<meta name="robots" content="noindex, nofollow">
 <title>Anthony & Yona — 5 Juillet 2027</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -712,7 +714,7 @@
   }
 
   /* Fenetre d'inspiration robe / costume */
-  #dressModal {
+  #dressModal, #weroModal {
     position: fixed;
     inset: 0;
     z-index: 200;
@@ -722,7 +724,7 @@
     padding: 1.5rem;
     background: rgba(58,46,36,0.55);
   }
-  #dressModal.open { display: flex; }
+  #dressModal.open, #weroModal.open { display: flex; }
   .dress-modal-card {
     position: relative;
     background: var(--cream);
@@ -791,6 +793,51 @@
     color: var(--muted);
     line-height: 1.7;
   }
+  .gift-btn {
+    margin-top: 1.2rem;
+    background: none;
+    border: 1px solid rgba(90,69,52,0.3);
+    border-radius: 100px;
+    padding: 0.55rem 1.4rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--brown);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .gift-btn:hover { background: rgba(90,69,52,0.06); }
+
+  /* Fenetre Wero */
+  #weroModal .dress-modal-card { max-width: 380px; }
+  .wero-name { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .wero-name strong { color: var(--brown); font-weight: 400; }
+  .wero-number {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    background: white;
+    border: 1px solid rgba(90,69,52,0.15);
+    border-radius: 14px;
+    padding: 0.7rem 0.7rem 0.7rem 1.1rem;
+  }
+  .wero-number span { font-size: 1.15rem; letter-spacing: 0.08em; color: var(--text); }
+  .wero-copy {
+    border: none;
+    border-radius: 100px;
+    background: var(--brown);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .wero-steps { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin: 0.8rem 0 1.2rem; }
+  .wero-qr img { width: 190px; max-width: 70%; display: block; margin: 0 auto 0.5rem; }
+  .wero-qr p { font-size: 0.72rem; color: var(--muted); font-style: italic; }
 
   /* RSVP */
   .rsvp-section {
@@ -1447,12 +1494,29 @@
 </section>
 
 <!-- CAGNOTTE (mention discrete, a titre informatif) -->
-<!-- Quand le lien (cagnotte ou Wero) sera choisi, remplacer la 2e phrase par :
-     Sinon, vous pouvez aussi passer par <a href="LIEN">notre cagnotte en ligne</a>. -->
 <section class="gift-note">
   <p>Pour tous ceux qui nous l'ont demandé, une urne sera présente sur place.<br>
-  Une cagnotte en ligne sera également disponible : le lien sera partagé ici prochainement.</p>
+  Il est aussi possible de participer à distance via Wero.</p>
+  <button class="gift-btn" id="weroOpen">Participer via Wero</button>
 </section>
+
+<!-- Fenetre Wero : numero a copier + QR code -->
+<div id="weroModal" role="dialog" aria-modal="true" aria-labelledby="weroModalTitle">
+  <div class="dress-modal-card">
+    <button class="dress-modal-close" id="weroModalClose" aria-label="Fermer">×</button>
+    <p class="dress-modal-title" id="weroModalTitle">Wero</p>
+    <p class="wero-name">Bénéficiaire : <strong>Anthony Dubois</strong></p>
+    <div class="wero-number">
+      <span>07 77 38 27 06</span>
+      <button class="wero-copy" id="weroCopy" data-number="0777382706">Copier</button>
+    </div>
+    <p class="wero-steps">Ouvrez l'application de votre banque, rubrique <em>Wero</em>,<br>puis envoyez à ce numéro.</p>
+    <div class="wero-qr">
+      <img src="images/wero-qr.png" alt="QR code Wero d'Anthony Dubois">
+      <p>Ou scannez ce QR code depuis l'application de votre banque</p>
+    </div>
+  </div>
+</div>
 
 <!-- GALERIE — compact cards with peek -->
 <section class="gallery-section" id="galerie">
@@ -1756,6 +1820,38 @@ envOverlay.addEventListener('click', openEnvelope);
   document.getElementById('dressModalClose').addEventListener('click', close);
   modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+})();
+
+// ===== WERO : fenetre avec numero a copier =====
+(function() {
+  var modal = document.getElementById('weroModal');
+  var copyBtn = document.getElementById('weroCopy');
+  document.getElementById('weroOpen').addEventListener('click', function() { modal.classList.add('open'); });
+  function close() { modal.classList.remove('open'); copyBtn.textContent = 'Copier'; }
+  document.getElementById('weroModalClose').addEventListener('click', close);
+  modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+
+  copyBtn.addEventListener('click', function() {
+    var number = copyBtn.getAttribute('data-number');
+    function done() { copyBtn.textContent = 'Copié ✓'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(number).then(done, fallback);
+    } else {
+      fallback();
+    }
+    // Pour les navigateurs sans acces au presse-papiers moderne
+    function fallback() {
+      var t = document.createElement('textarea');
+      t.value = number;
+      t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t);
+      t.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(t);
+    }
+  });
 })();
 
 // ===== Carrousel HEBERGEMENTS (swipe + points) =====
