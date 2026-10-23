@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Site prive : pas d'indexation par Google et les autres moteurs -->
 <meta name="robots" content="noindex, nofollow">
+<!-- Empeche iPhone de transformer les numeros (telephone, IBAN) en liens bleus -->
+<meta name="format-detection" content="telephone=no">
 <title>Anthony & Yona — 5 Juillet 2027</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -826,34 +828,77 @@
     padding-top: 1.2rem;
     border-top: 1px solid rgba(122,140,110,0.2);
   }
-  .wero-number {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.8rem;
+  /* Un seul encadre par moyen de paiement, lignes separees par un filet */
+  .pay-group {
     background: white;
-    border: 1px solid rgba(90,69,52,0.15);
-    border-radius: 14px;
-    padding: 0.6rem 0.7rem 0.6rem 1.1rem;
-    margin-bottom: 0.6rem;
+    border: 1px solid rgba(90,69,52,0.12);
+    border-radius: 18px;
+    box-shadow: 0 2px 14px rgba(90,69,52,0.06);
+    overflow: hidden;
     text-align: left;
   }
-  .wero-number small { display: block; font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
-  .wero-number span { font-size: 1.1rem; letter-spacing: 0.08em; color: var(--text); }
-  .wero-number.iban span { font-size: 0.82rem; letter-spacing: 0.04em; }
-  .wero-number .nb { white-space: nowrap; }
-  .wero-copy {
-    border: none;
-    border-radius: 100px;
-    background: var(--brown);
+  .pay-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 0.75rem;
+  }
+  .pay-row + .pay-row { border-top: 1px solid rgba(90,69,52,0.08); }
+  .pay-avatar {
+    flex: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
     color: var(--cream);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+    background: var(--terracotta);
+  }
+  .pay-avatar.alt { background: var(--brown); }
+  .pay-avatar.bank { background: var(--sage-pale); color: var(--brown); }
+  .pay-info { flex: 1; min-width: 0; }
+  .pay-info small {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 1px;
+  }
+  .pay-info span {
+    font-size: clamp(0.92rem, 4.1vw, 1.05rem);
+    letter-spacing: 0.04em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
+  /* IBAN sur deux lignes nettes */
+  .pay-row.iban .pay-info span { font-size: 0.78rem; letter-spacing: 0.02em; line-height: 1.55; white-space: normal; }
+  .pay-row.iban .pay-info .nb { display: block; white-space: nowrap; }
+  /* Securite : si un navigateur transforme quand meme un numero en lien */
+  #weroModal a { color: inherit; text-decoration: none; }
+  .wero-copy {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid rgba(90,69,52,0.25);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--brown);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    padding: 0.42rem 0.7rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+  }
+  #weroModal .dress-modal-card { padding-left: 1rem; padding-right: 1rem; }
+  .wero-copy svg { width: 13px; height: 13px; }
+  .wero-copy.copied { background: var(--brown); border-color: var(--brown); color: var(--cream); }
   .wero-steps { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin: 0 0 0.9rem; }
   /* Le QR code ne sert que sur PC (un telephone ne peut pas scanner son propre ecran) */
   .wero-qr { display: none; margin-top: 0.6rem; }
@@ -1530,13 +1575,17 @@
 
     <p class="pay-label">Par Wero</p>
     <p class="wero-steps">Ouvrez l'application de votre banque, rubrique <em>Wero</em>,<br>puis envoyez à l'un de ces numéros.</p>
-    <div class="wero-number">
-      <div><small>Anthony Dubois</small><span>07 77 38 27 06</span></div>
-      <button class="wero-copy" data-copy="0777382706">Copier</button>
-    </div>
-    <div class="wero-number">
-      <div><small>Yona</small><span>06 73 39 79 28</span></div>
-      <button class="wero-copy" data-copy="0673397928">Copier</button>
+    <div class="pay-group">
+      <div class="pay-row">
+        <span class="pay-avatar">A</span>
+        <div class="pay-info"><small>Anthony Dubois</small><span>07 77 38 27 06</span></div>
+        <button class="wero-copy" data-copy="0777382706"></button>
+      </div>
+      <div class="pay-row">
+        <span class="pay-avatar alt">Y</span>
+        <div class="pay-info"><small>Yona</small><span>06 73 39 79 28</span></div>
+        <button class="wero-copy" data-copy="0673397928"></button>
+      </div>
     </div>
     <div class="wero-qr">
       <img src="images/wero-qr.png" alt="QR code Wero d'Anthony Dubois">
@@ -1544,9 +1593,14 @@
     </div>
 
     <p class="pay-label second">Par virement bancaire</p>
-    <div class="wero-number iban">
-      <div><small>IBAN</small><span><span class="nb">FR76 1027 8060 0600</span> <span class="nb">0212 9600 168</span></span></div>
-      <button class="wero-copy" data-copy="FR7610278060060002129600168">Copier</button>
+    <div class="pay-group">
+      <div class="pay-row iban">
+        <span class="pay-avatar bank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
+        </span>
+        <div class="pay-info"><small>IBAN</small><span><span class="nb">FR76 1027 8060 0600</span> <span class="nb">0212 9600 168</span></span></div>
+        <button class="wero-copy" data-copy="FR7610278060060002129600168"></button>
+      </div>
     </div>
   </div>
 </div>
@@ -1860,7 +1914,12 @@ envOverlay.addEventListener('click', openEnvelope);
   var modal = document.getElementById('weroModal');
   var copyBtns = modal.querySelectorAll('.wero-copy');
   document.getElementById('weroOpen').addEventListener('click', function() { modal.classList.add('open'); });
-  function resetBtns() { copyBtns.forEach(function(b) { b.textContent = 'Copier'; }); }
+  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function resetBtns() {
+    copyBtns.forEach(function(b) { b.classList.remove('copied'); b.innerHTML = ICON_COPY + 'Copier'; });
+  }
+  resetBtns();
   function close() { modal.classList.remove('open'); resetBtns(); }
   document.getElementById('weroModalClose').addEventListener('click', close);
   modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
@@ -1869,7 +1928,7 @@ envOverlay.addEventListener('click', openEnvelope);
   copyBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       var value = btn.getAttribute('data-copy');
-      function done() { resetBtns(); btn.textContent = 'Copié ✓'; }
+      function done() { resetBtns(); btn.classList.add('copied'); btn.innerHTML = ICON_OK + 'Copié'; }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(value).then(done, fallback);
       } else {
