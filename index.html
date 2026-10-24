@@ -1182,14 +1182,21 @@
 
     /* Accueil plein ecran : meme style que sur telephone (photo en vraies
        couleurs, degrade sombre en bas, texte blanc), prenoms sur une ligne */
-    .hero { padding: 6rem 2rem 7rem; }
-    .hero-bg { background-position: center 26%; }
+    /* Section plus haute que l'ecran (115vh) pour devoir un peu plus de photo
+       en bas en defilant. Le texte reste au meme endroit a l'ecran et le haut
+       de la photo garde exactement le meme cadrage qu'avec 100vh (26 %). */
+    .hero { min-height: 115vh; padding: 6rem 2rem calc(7rem + 15vh); }
+    .hero-bg {
+      background-position: center calc(-1 * max(0px, min(0.26 * (150vw - 100vh), 150vw - 115vh)));
+    }
+    .scroll-hint { bottom: calc(2rem + 15vh); }
     .hero-bg::after {
       background: linear-gradient(to bottom,
         rgba(40,28,20,0.25) 0%,
         rgba(40,28,20,0) 30%,
-        rgba(40,28,20,0.32) 55%,
-        rgba(40,28,20,0.75) 100%);
+        rgba(40,28,20,0.32) 48%,
+        rgba(40,28,20,0.72) 78%,
+        rgba(40,28,20,0.6) 100%);
     }
     .hero-label { max-width: 520px; }
     .hero-names br { display: none; }
