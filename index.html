@@ -287,6 +287,9 @@
     font-weight: 300;
     color: var(--brown);
     line-height: 1;
+    /* chiffres alignes (sans jambage qui descend sur le libelle) */
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
   }
 
   .count-label {
@@ -1177,34 +1180,44 @@
     nav a { font-size: 11px; }
     .nav-logo { left: 24px; height: 50px; }
 
-    /* Accueil en deux moities : photo a gauche, texte a droite sur fond creme */
+    /* Accueil facon faire-part : sur fond creme, la photo entiere dans un
+       cadre en arche au centre, les prenoms et la date en dessous */
     .hero {
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 0;
+      justify-content: flex-start;
+      padding: 84px 2rem 2.5rem;
       background: var(--cream);
     }
     .hero-bg {
-      right: auto;
-      width: 50%;
-      background-position: center 35%;
+      position: relative;
+      inset: auto;
+      order: 1;
+      flex: none;
+      height: max(280px, calc(100vh - 330px));
+      width: calc(max(280px, calc(100vh - 330px)) * 0.72);
+      border-radius: 999px 999px 18px 18px;
+      background-position: center 30%;
+      box-shadow: 0 12px 40px rgba(90,69,52,0.18);
     }
     .hero-bg::after { background: none; }
-    .hero-inner { width: 50%; padding: 7rem 3rem 5rem; box-sizing: border-box; }
-    .hero-label { color: var(--sage); text-shadow: none; max-width: 380px; }
-    .hero-names { color: var(--brown); text-shadow: none; }
-    .hero-names span { color: var(--terracotta); }
-    .divider-leaf::before, .divider-leaf::after { background: var(--sage-light); }
-    .hero .divider-leaf svg { stroke: var(--sage); }
+    /* les elements du texte se placent autour de la photo */
+    .hero-inner { display: contents; }
+    .hero-label { order: 0; margin-bottom: 1.1rem; color: var(--sage); text-shadow: none; max-width: 400px; }
+    .hero-names { order: 2; margin-top: 1rem; font-size: 4.2rem; color: var(--brown); text-shadow: none; }
+    .hero-names br { display: none; }
+    .hero-names span { color: var(--terracotta); margin: 0 0.2em; }
+    .hero .divider-leaf { display: none; }
     .hero-date {
+      order: 3;
+      margin-top: 0.6rem;
       color: var(--brown);
       background: var(--sage-pale);
       border-color: transparent;
       backdrop-filter: none;
     }
-    .scroll-hint { left: 50%; color: var(--sage); }
-    .scroll-hint::after { background: var(--sage-light); }
+    .scroll-hint { display: none; }
+
+    /* Decompte : plus resserre au centre */
+    .countdown-wrap { max-width: 640px; margin: 0 auto; }
 
     /* Galerie : photos entieres (format portrait), la photo active au centre */
     .gallery-viewport { position: relative; padding: 0; }
