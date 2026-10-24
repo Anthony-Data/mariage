@@ -57,8 +57,12 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 1rem 1.2rem;
-    padding: 0.9rem 1rem;
+    align-content: center;
+    gap: 0.7rem 1rem;
+    /* place a gauche pour le logo, qui reste dans la barre */
+    padding: 0.75rem 1rem 0.75rem 64px;
+    min-height: 56px;
+    box-sizing: border-box;
     background: rgba(245,240,232,0.92);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(122,140,110,0.15);
@@ -77,26 +81,26 @@
   nav { overflow: visible; }
   .nav-logo {
     position: absolute;
-    left: 1rem;
-    top: auto;
-    bottom: -24px;          /* descendu : il s'aligne sur le bas de la baniere et deborde legerement */
-    transform: none;
-    width: 62px;            /* nettement plus grand */
-    height: auto;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);   /* centre verticalement dans la barre */
+    height: 46px;
+    width: auto;
     object-fit: contain;
     opacity: 1;
-    filter: drop-shadow(0 2px 6px rgba(90,69,52,0.25));
+    filter: drop-shadow(0 1px 3px rgba(90,69,52,0.18));
   }
 
   /* HERO */
+  /* Telephone : photo pleine page, texte blanc en bas sur un degrade sombre */
   .hero {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     position: relative;
-    padding: 6rem 2rem 4rem;
+    padding: 6rem 1.5rem 6.5rem;
     overflow: hidden;
   }
 
@@ -113,17 +117,17 @@
     content: '';
     position: absolute;
     inset: 0;
-    /* Halo creme concentre derriere le texte central pour le contraste,
-       tout en laissant la photo respirer sur les bords */
-    background:
-      radial-gradient(ellipse 85% 60% at 50% 46%,
-        rgba(245,240,232,0.88) 0%,
-        rgba(245,240,232,0.55) 55%,
-        rgba(245,240,232,0.35) 100%),
-      linear-gradient(to bottom, rgba(245,240,232,0.35), rgba(245,240,232,0.45));
+    /* Photo laissee dans ses vraies couleurs ; degrade sombre en bas
+       pour que le texte blanc soit bien lisible */
+    background: linear-gradient(to bottom,
+      rgba(40,28,20,0.25) 0%,
+      rgba(40,28,20,0) 28%,
+      rgba(40,28,20,0.12) 50%,
+      rgba(40,28,20,0.72) 100%);
   }
 
   .botanical { position: absolute; pointer-events: none; z-index: 1; }
+  .hero .botanical { display: none; }
   .botanical-tl { top: -20px; left: -20px; width: 220px; opacity: 0.6; transform: rotate(-10deg); }
   .botanical-br { bottom: -20px; right: -20px; width: 200px; opacity: 0.55; transform: rotate(170deg) scaleX(-1); }
 
@@ -141,10 +145,11 @@
     font-size: 10px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--sage);
+    line-height: 1.8;
+    color: rgba(255,255,255,0.92);
     opacity: 0;
     animation: fadeUp 0.8s ease 0.2s forwards;
-    text-shadow: 0 1px 8px rgba(255,255,255,0.9);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.35);
   }
 
   .hero-names {
@@ -153,13 +158,12 @@
     font-weight: 400;
     font-style: italic;
     line-height: 1.05;
-    color: var(--brown);
+    color: #fff;
     opacity: 0;
     animation: fadeUp 1s ease 0.5s forwards;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.95), 0 2px 14px rgba(255,255,255,0.9), 0 4px 34px rgba(245,240,232,0.7);
-    -webkit-text-stroke: 0.4px rgba(90,69,52,0.4);
+    text-shadow: 0 2px 18px rgba(0,0,0,0.35);
   }
-  .hero-names span { color: var(--terracotta); font-style: normal; }
+  .hero-names span { color: #f3cfae; font-style: normal; }
 
   .divider-leaf {
     display: flex;
@@ -173,22 +177,23 @@
     display: block;
     width: 50px;
     height: 1px;
-    background: var(--sage-light);
+    background: rgba(255,255,255,0.6);
   }
+  .hero .divider-leaf svg { stroke: rgba(255,255,255,0.85); }
 
   .hero-date {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.4rem;
-    font-weight: 600;
-    color: #3a2d22;
+    font-weight: 500;
+    color: #fff;
     letter-spacing: 0.12em;
     opacity: 0;
     animation: fadeUp 0.8s ease 1s forwards;
-    text-shadow: 0 2px 12px rgba(255,255,255,0.95);
-    background: rgba(255,255,255,0.35);
-    padding: 4px 18px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 4px 20px;
     border-radius: 100px;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
   }
 
   .scroll-hint {
@@ -200,7 +205,7 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    color: var(--sage);
+    color: rgba(255,255,255,0.8);
     font-size: 9px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -214,7 +219,7 @@
     display: block;
     width: 1px;
     height: 28px;
-    background: var(--sage-light);
+    background: rgba(255,255,255,0.6);
     animation: scrollPulse 2s ease infinite;
   }
 
@@ -1156,17 +1161,39 @@
               mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
     }
 
-    /* Accueil : photo de couverture visible en entier, sur un fond flou
-       de la meme photo pour remplir les cotes */
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: -40px;
-      background: url('images/photo_couverture.jpg') center / cover no-repeat;
-      filter: blur(28px);
-      z-index: 0;
+    /* En-tete : une seule ligne de liens, logo a gauche dans la barre */
+    nav { padding: 0.9rem 2rem 0.9rem 80px; min-height: 64px; gap: 1rem 1.6rem; }
+    nav a { font-size: 10px; }
+    .nav-logo { left: 24px; height: 50px; }
+
+    /* Accueil en deux moities : photo a gauche, texte a droite sur fond creme */
+    .hero {
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0;
+      background: var(--cream);
     }
-    .hero-bg { background-size: contain; }
+    .hero-bg {
+      right: auto;
+      width: 50%;
+      background-position: center 35%;
+    }
+    .hero-bg::after { background: none; }
+    .hero-inner { width: 50%; padding: 7rem 3rem 5rem; box-sizing: border-box; }
+    .hero-label { color: var(--sage); text-shadow: none; max-width: 380px; }
+    .hero-names { color: var(--brown); text-shadow: none; }
+    .hero-names span { color: var(--terracotta); }
+    .divider-leaf::before, .divider-leaf::after { background: var(--sage-light); }
+    .hero .divider-leaf svg { stroke: var(--sage); }
+    .hero-date {
+      color: var(--brown);
+      background: var(--sage-pale);
+      border-color: transparent;
+      backdrop-filter: none;
+    }
+    .scroll-hint { left: 50%; color: var(--sage); }
+    .scroll-hint::after { background: var(--sage-light); }
 
     /* Galerie : photos entieres (format portrait), la photo active au centre */
     .gallery-viewport { position: relative; padding: 0; }
@@ -1237,7 +1264,7 @@
 
 <!-- NAV -->
 <nav>
-  <img src="images/logo.png" class="nav-logo" alt="Logo AY" id="navLogo">
+  <img src="images/logo_nav.png" class="nav-logo" alt="Logo AY" id="navLogo">
   <a href="#accueil">Accueil</a>
   <a href="#decompte">Décompte</a>
   <a href="#lieu">Lieu</a>
@@ -1411,7 +1438,7 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <!-- Horaire provisoire, a redefinir -->
-          <span class="tl-time">12h00</span>
+          <span class="tl-time">12h00 (à confirmer)</span>
           <h3 class="tl-title">Brunch des mariés</h3>
           <p class="tl-desc">Prolongeons les festivités autour d'un brunch convivial, pour ceux qui restent.</p>
         </div>
