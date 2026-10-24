@@ -1180,41 +1180,20 @@
     nav a { font-size: 11px; }
     .nav-logo { left: 24px; height: 50px; }
 
-    /* Accueil facon faire-part : sur fond creme, la photo entiere dans un
-       cadre en arche au centre, les prenoms et la date en dessous */
-    .hero {
-      justify-content: flex-start;
-      padding: 84px 2rem 2.5rem;
-      background: var(--cream);
+    /* Accueil plein ecran : meme style que sur telephone (photo en vraies
+       couleurs, degrade sombre en bas, texte blanc), prenoms sur une ligne */
+    .hero { padding: 6rem 2rem 7rem; }
+    .hero-bg { background-position: center 38%; }
+    .hero-bg::after {
+      background: linear-gradient(to bottom,
+        rgba(40,28,20,0.25) 0%,
+        rgba(40,28,20,0) 30%,
+        rgba(40,28,20,0.32) 55%,
+        rgba(40,28,20,0.75) 100%);
     }
-    .hero-bg {
-      position: relative;
-      inset: auto;
-      order: 1;
-      flex: none;
-      height: max(280px, calc(100vh - 330px));
-      width: calc(max(280px, calc(100vh - 330px)) * 0.72);
-      border-radius: 999px 999px 18px 18px;
-      background-position: center 30%;
-      box-shadow: 0 12px 40px rgba(90,69,52,0.18);
-    }
-    .hero-bg::after { background: none; }
-    /* les elements du texte se placent autour de la photo */
-    .hero-inner { display: contents; }
-    .hero-label { order: 0; margin-bottom: 1.1rem; color: var(--sage); text-shadow: none; max-width: 400px; }
-    .hero-names { order: 2; margin-top: 1rem; font-size: 4.2rem; color: var(--brown); text-shadow: none; }
+    .hero-label { max-width: 520px; }
     .hero-names br { display: none; }
-    .hero-names span { color: var(--terracotta); margin: 0 0.2em; }
-    .hero .divider-leaf { display: none; }
-    .hero-date {
-      order: 3;
-      margin-top: 0.6rem;
-      color: var(--brown);
-      background: var(--sage-pale);
-      border-color: transparent;
-      backdrop-filter: none;
-    }
-    .scroll-hint { display: none; }
+    .hero-names span { margin: 0 0.25em; }
 
     /* Decompte : plus resserre au centre */
     .countdown-wrap { max-width: 640px; margin: 0 auto; }
