@@ -365,6 +365,14 @@
 
   .lieu-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
 
+  .venue-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(184,120,90,0.5);
+    text-underline-offset: 3px;
+  }
+  .venue-link:hover { color: var(--terracotta); }
+
   .lieu-card address {
     font-style: normal;
     font-size: 0.82rem;
@@ -1312,7 +1320,7 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         iOS / iPhone
       </a>
-      <a class="agenda-btn agenda-btn-android" id="btnGoogle" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Yona&dates=20270705T133000Z/20270706T120000Z&details=Mariage+de+Anthony+et+Yona+%F0%9F%8C%BF&location=Quinta+dos+Amores,+Portugal" target="_blank">
+      <a class="agenda-btn agenda-btn-android" id="btnGoogle" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Yona&dates=20270705/20270706&details=Mariage+de+Anthony+et+Yona+%F0%9F%8C%BF&location=Quinta+dos+Amores,+Portugal" target="_blank">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Google / Android
       </a>
@@ -1331,9 +1339,9 @@
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <h3>Cérémonie &amp; Réception</h3>
-      <p>La cérémonie et la fête se tiendront dans l'écrin verdoyant de la Quinta dos Amores, au cœur du Portugal.</p>
+      <p>La cérémonie et la fête se tiendront dans l'écrin verdoyant de la <a href="https://www.quintadosamores.pt/" target="_blank" rel="noopener" class="venue-link">Quinta dos Amores</a>, au cœur du Portugal.</p>
       <address>
-        Quinta dos Amores<br>
+        <a href="https://www.quintadosamores.pt/" target="_blank" rel="noopener" class="venue-link">Quinta dos Amores</a><br>
         Portugal
       </address>
       <a href="https://maps.google.com/?q=Quinta+dos+Amores+Portugal" target="_blank" class="map-link">
@@ -1699,8 +1707,9 @@ document.getElementById('btnApple').addEventListener('click', function(e) {
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     'SUMMARY:Mariage Anthony & Yona 🌿',
-    'DTSTART:20270705T133000Z',
-    'DTEND:20270706T120000Z',
+    // Evenement sur la journee entiere du 5 juillet, sans horaire de fin
+    'DTSTART;VALUE=DATE:20270705',
+    'DTEND;VALUE=DATE:20270706',
     'LOCATION:Quinta dos Amores, Portugal',
     'DESCRIPTION:Mariage de Anthony et Yona — Quinta dos Amores, Portugal',
     'END:VEVENT',
