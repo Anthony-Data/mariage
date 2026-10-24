@@ -632,7 +632,8 @@
 
   .dress-colors {
     display: flex;
-    gap: 12px;
+    /* Taille adaptee a l'ecran pour garder les 7 couleurs sur une ligne */
+    gap: clamp(6px, 2.2vw, 12px);
     justify-content: center;
     margin-top: 0.5rem;
   }
@@ -640,7 +641,8 @@
   .dress-colors { flex-wrap: wrap; }
 
   .dress-swatch {
-    width: 34px; height: 34px;
+    width: clamp(28px, 8vw, 34px); height: clamp(28px, 8vw, 34px);
+    flex: none;
     border-radius: 50%;
     border: 2px solid white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
@@ -1429,12 +1431,13 @@
          <couleur>-robe.jpg et <couleur>-costume.jpg (ex : bordeaux-robe.jpg).
          Sans photo, une illustration de la couleur s'affiche. -->
     <div class="dress-colors">
-      <button class="dress-swatch" style="background:#d9a521" data-name="Jaune moutarde" data-slug="jaune" aria-label="Jaune moutarde"></button>
+      <button class="dress-swatch" style="background:#f4dd99" data-name="Jaune" data-slug="jaune" aria-label="Jaune"></button>
       <button class="dress-swatch" style="background:#e07a2f" data-name="Orange" data-slug="orange" aria-label="Orange"></button>
       <button class="dress-swatch" style="background:#c0392b" data-name="Rouge" data-slug="rouge" aria-label="Rouge"></button>
       <button class="dress-swatch" style="background:#7b1e3a" data-name="Bordeaux" data-slug="bordeaux" aria-label="Bordeaux"></button>
       <button class="dress-swatch" style="background:#4a7fd4" data-name="Bleu" data-slug="bleu" aria-label="Bleu"></button>
-      <button class="dress-swatch" style="background:#6c3d91" data-name="Violet" data-slug="violet" aria-label="Violet"></button>
+      <button class="dress-swatch" style="background:#ab80b6" data-name="Violet" data-slug="violet" aria-label="Violet"></button>
+      <button class="dress-swatch" style="background:#a67b5b" data-name="Marron clair" data-slug="marron" aria-label="Marron clair"></button>
     </div>
     <p class="dress-hint">Touchez une couleur pour découvrir une idée de robe et de costume</p>
     <div class="dress-forbidden">
