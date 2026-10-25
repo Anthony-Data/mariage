@@ -1144,6 +1144,28 @@
 
   .gallery-arrow { display: none; }
 
+  /* Bouton « revenir au debut » : apparait a droite sur le dernier element */
+  .gallery-viewport, .heb-viewport { position: relative; }
+  .carousel-restart {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    z-index: 3;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(90,69,52,0.25);
+    background: rgba(245,240,232,0.95) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a4534' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7'/%3E%3Cpath d='M3 4v5h5'/%3E%3C/svg%3E") center / 20px no-repeat;
+    box-shadow: 0 2px 10px rgba(90,69,52,0.15);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(10px, -50%);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .carousel-restart.show { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
+  /* Hotels : bouton au niveau de la photo, pour ne pas couvrir le texte de la carte */
+  .heb-viewport .carousel-restart { top: 95px; right: 14px; }
+
   /* ===== ADAPTATION PC / TABLETTE (ecrans larges) ===== */
   @media (min-width: 768px) {
     /* Intro : la video verticale est affichee en entier, sans etirement.
@@ -1228,6 +1250,8 @@
       transition: background 0.3s;
     }
     .gallery-arrow:hover { background: var(--cream); }
+    /* Sur PC : fleches pour la galerie, hotels cote a cote -> pas de bouton retour */
+    .carousel-restart { display: none; }
     .gallery-arrow.prev { left: 24px; }
     .gallery-arrow.next { right: 24px; }
 
@@ -1576,6 +1600,7 @@
       </div>
 
     </div>
+    <button class="carousel-restart" id="hebRestart" aria-label="Revenir au premier hôtel"></button>
   </div>
   <div class="gallery-dots" id="hebDots"></div>
 </section>
@@ -1684,6 +1709,7 @@
     </div>
     <button class="gallery-arrow prev" id="galleryPrev" aria-label="Photo précédente">‹</button>
     <button class="gallery-arrow next" id="galleryNext" aria-label="Photo suivante">›</button>
+    <button class="carousel-restart" id="galleryRestart" aria-label="Revenir à la première photo"></button>
   </div>
 
   <div class="gallery-dots" id="galleryDots"></div>
@@ -1753,6 +1779,62 @@ document.getElementById('btnApple').addEventListener('click', function(e) {
   URL.revokeObjectURL(url);
 });
 
+// ===== GLISSEMENT TACTILE COMMUN (galerie et hotels) =====
+// Le carrousel suit le doigt pendant le glissement, puis se cale sur l'element
+// suivant / precedent au relachement (ou revient en place si le geste est trop court).
+// Aux extremites (premier / dernier element), un effet de resistance empeche d'aller plus loin.
+function enableSwipe(o) {
+  var startX = 0, startY = 0, lastX = 0, startTime = 0, axis = null, base = 0;
+  o.viewport.addEventListener('touchstart', function(e){
+    if (o.enabled && !o.enabled()) return;
+    startX = lastX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    startTime = Date.now();
+    axis = null;
+    if (o.onTouch) o.onTouch();
+  }, {passive: true});
+
+  o.viewport.addEventListener('touchmove', function(e){
+    if (o.enabled && !o.enabled()) return;
+    var x = e.touches[0].clientX;
+    var dx = x - startX;
+    var dy = e.touches[0].clientY - startY;
+    // On decide une seule fois si le geste est horizontal (carrousel) ou vertical (page)
+    if (axis === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (axis === 'x') {
+        base = o.shiftFor(o.current());
+        o.track.style.transition = 'none';
+      }
+    }
+    if (axis !== 'x') return;
+    e.preventDefault();
+    lastX = x;
+    var cur = o.current(), last = o.count - 1;
+    var d = ((cur === 0 && dx > 0) || (cur === last && dx < 0)) ? dx * 0.35 : dx;
+    o.track.style.transform = 'translateX(' + (-base + d) + 'px)';
+  }, {passive: false});
+
+  function end() {
+    if (axis === 'x') {
+      o.track.style.transition = '';
+      var dx = lastX - startX;
+      var quick = Date.now() - startTime < 300 && Math.abs(dx) > 25;
+      var passed = Math.abs(dx) > Math.min(80, o.itemWidth() * 0.2);
+      var cur = o.current(), next = cur;
+      if (passed || quick) {
+        if (dx < 0 && cur < o.count - 1) next = cur + 1;
+        else if (dx > 0 && cur > 0) next = cur - 1;
+      }
+      o.goTo(next);
+    }
+    axis = null;
+    if (o.onDone) o.onDone();
+  }
+  o.viewport.addEventListener('touchend', end);
+  o.viewport.addEventListener('touchcancel', end);
+}
+
 // GALLERY SLIDER
 var viewport = document.querySelector('.gallery-viewport');
 var track = document.getElementById('galleryTrack');
@@ -1762,12 +1844,7 @@ var current = 0;
 var autoTimer;
 var slideW = 0;
 var gap = 12;
-var touchStartX = 0;
-var touchStartY = 0;
-var touchLastX = 0;
-var touchStartTime = 0;
-var swipeAxis = null;      // 'x' (glissement photos) ou 'y' (defilement de la page)
-var dragBase = 0;          // decalage du carrousel au debut du glissement
+var galleryRestart = document.getElementById('galleryRestart');
 
 function computeSlideW() {
   if (slides[0]) slideW = slides[0].offsetWidth;
@@ -1796,6 +1873,8 @@ function goTo(idx) {
   current = Math.max(0, Math.min(idx, slides.length - 1));
   track.style.transform = 'translateX(' + (-shiftFor(current)) + 'px)';
   slides.forEach(function(s, i){ s.classList.toggle('active', i === current); });
+  // Bouton « revenir au debut » visible seulement sur la derniere photo
+  galleryRestart.classList.toggle('show', current === slides.length - 1);
   dotsContainer.querySelectorAll('.gallery-dot').forEach(function(d, i){
     d.classList.toggle('active', i === current);
   });
@@ -1813,56 +1892,23 @@ function resetAuto() {
   clearInterval(autoTimer);
   autoTimer = setInterval(function(){
     goTo(current < slides.length - 1 ? current + 1 : 0);
-  }, 3000);
+  }, 3500);
 }
 
-// Swipe tactile : la photo suit le doigt pendant le glissement
-viewport.addEventListener('touchstart', function(e){
-  touchStartX = touchLastX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-  touchStartTime = Date.now();
-  swipeAxis = null;
-  clearInterval(autoTimer);
-}, {passive: true});
+// Glissement tactile
+enableSwipe({
+  viewport: viewport,
+  track: track,
+  count: slides.length,
+  current: function(){ return current; },
+  shiftFor: shiftFor,
+  itemWidth: function(){ return slideW; },
+  goTo: goTo,
+  onTouch: function(){ clearInterval(autoTimer); },
+  onDone: resetAuto
+});
 
-viewport.addEventListener('touchmove', function(e){
-  var x = e.touches[0].clientX;
-  var dx = x - touchStartX;
-  var dy = e.touches[0].clientY - touchStartY;
-  // On decide une seule fois si le geste est horizontal (photos) ou vertical (page)
-  if (swipeAxis === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
-    swipeAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-    if (swipeAxis === 'x') {
-      dragBase = shiftFor(current);
-      track.style.transition = 'none';
-    }
-  }
-  if (swipeAxis !== 'x') return;
-  e.preventDefault();
-  touchLastX = x;
-  // Leger effet de resistance si on tire vers la droite sur la premiere photo
-  var d = (current === 0 && dx > 0) ? dx * 0.35 : dx;
-  track.style.transform = 'translateX(' + (-dragBase + d) + 'px)';
-}, {passive: false});
-
-function endSwipe() {
-  if (swipeAxis === 'x') {
-    track.style.transition = '';
-    var dx = touchLastX - touchStartX;
-    var quick = Date.now() - touchStartTime < 300 && Math.abs(dx) > 25;
-    var passed = Math.abs(dx) > Math.min(80, slideW * 0.2);
-    var next = current;
-    if (passed || quick) {
-      if (dx < 0) next = current < slides.length - 1 ? current + 1 : 0;   // derniere photo -> premiere
-      else if (current > 0) next = current - 1;
-    }
-    goTo(next);
-  }
-  swipeAxis = null;
-  resetAuto();
-}
-viewport.addEventListener('touchend', endSwipe);
-viewport.addEventListener('touchcancel', endSwipe);
+galleryRestart.addEventListener('click', function(){ goTo(0); resetAuto(); });
 
 // Revient a la premiere photo sans animation (en arrivant sur la galerie)
 function jumpTo(idx) {
@@ -2031,19 +2077,20 @@ envOverlay.addEventListener('click', openEnvelope);
   });
 })();
 
-// ===== Carrousel HEBERGEMENTS (swipe + points) =====
+// ===== Carrousel HEBERGEMENTS (glissement + points) =====
 (function() {
   var viewport = document.querySelector('.heb-viewport');
   var track = document.getElementById('hebTrack');
   if (!viewport || !track) return;
   var dotsContainer = document.getElementById('hebDots');
+  var restart = document.getElementById('hebRestart');
   var slides = track.querySelectorAll('.hotel-slide');
   var current = 0, slideW = 0, gap = 14;
-  var startX = 0, startY = 0, swiping = false;
 
   function computeW() { if (slides[0]) slideW = slides[0].offsetWidth; }
+  function shiftFor(idx) { computeW(); return idx * (slideW + gap); }
   computeW();
-  window.addEventListener('resize', function(){ computeW(); goTo(current); });
+  window.addEventListener('resize', function(){ goTo(current); });
 
   slides.forEach(function(_, i) {
     var dot = document.createElement('div');
@@ -2054,26 +2101,26 @@ envOverlay.addEventListener('click', openEnvelope);
 
   function goTo(idx) {
     current = Math.max(0, Math.min(idx, slides.length - 1));
-    computeW();
-    track.style.transform = 'translateX(-' + (current * (slideW + gap)) + 'px)';
+    track.style.transform = 'translateX(' + (-shiftFor(current)) + 'px)';
     dotsContainer.querySelectorAll('.gallery-dot').forEach(function(d, i){
       d.classList.toggle('active', i === current);
     });
+    restart.classList.toggle('show', current === slides.length - 1);
   }
 
-  viewport.addEventListener('touchstart', function(e){
-    startX = e.touches[0].clientX; startY = e.touches[0].clientY; swiping = false;
-  }, {passive: true});
-  viewport.addEventListener('touchmove', function(e){
-    var dx = Math.abs(e.touches[0].clientX - startX);
-    var dy = Math.abs(e.touches[0].clientY - startY);
-    if (!swiping && dx > 8) swiping = true;
-    if (swiping && dx > dy) e.preventDefault();
-  }, {passive: false});
-  viewport.addEventListener('touchend', function(e){
-    var dx = e.changedTouches[0].clientX - startX;
-    if (swiping && Math.abs(dx) > 30) goTo(current + (dx < 0 ? 1 : -1));
+  // Sur PC les hotels sont affiches cote a cote : pas de glissement
+  enableSwipe({
+    viewport: viewport,
+    track: track,
+    count: slides.length,
+    current: function(){ return current; },
+    shiftFor: shiftFor,
+    itemWidth: function(){ return slideW; },
+    goTo: goTo,
+    enabled: function(){ return !window.matchMedia('(min-width: 768px)').matches; }
   });
+
+  restart.addEventListener('click', function(){ goTo(0); });
 })();
 </script>
 </body>
