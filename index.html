@@ -488,8 +488,8 @@
     will-change: transform;
   }
   .hotel-slide {
-    min-width: 78vw;
-    max-width: 320px;
+    /* largeur limitee pour laisser une marge a droite (bouton retour) sur tous les telephones */
+    width: min(320px, calc(100vw - 96px));
     flex-shrink: 0;
     background: var(--cream);
     border: 1px solid rgba(122,140,110,0.2);
@@ -1164,7 +1164,17 @@
   }
   .carousel-restart.show { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
   /* Hotels : bouton au niveau de la photo, pour ne pas couvrir le texte de la carte */
-  .heb-viewport .carousel-restart { top: 95px; right: 14px; }
+  /* Hotels : bouton dans l'espace libre a droite de la carte,
+     a la hauteur de la jonction photo / texte (photo de 190px) */
+  .heb-wrap { position: relative; width: 100%; }
+  .heb-wrap .carousel-restart {
+    top: 190px;
+    right: auto;
+    /* centre de la marge entre le bord droit de la carte et le bord de l'ecran */
+    left: calc((min(320px, calc(100vw - 96px)) + 100vw) / 2 - 17px);
+    width: 34px; height: 34px;
+    background-size: 17px;
+  }
 
   /* ===== ADAPTATION PC / TABLETTE (ecrans larges) ===== */
   @media (min-width: 768px) {
@@ -1524,6 +1534,7 @@
   <p class="section-tag">Pour se reposer</p>
   <h2 class="section-title">Hébergements proches</h2>
 
+  <div class="heb-wrap">
   <div class="heb-viewport">
     <div class="heb-track" id="hebTrack">
 
@@ -1600,7 +1611,8 @@
       </div>
 
     </div>
-    <button class="carousel-restart" id="hebRestart" aria-label="Revenir au premier hôtel"></button>
+  </div>
+  <button class="carousel-restart" id="hebRestart" aria-label="Revenir au premier hôtel"></button>
   </div>
   <div class="gallery-dots" id="hebDots"></div>
 </section>
@@ -1969,8 +1981,8 @@ var envOverlay = document.getElementById('env-overlay');
 var envHint    = document.getElementById('env-hint');
 var envPoster  = document.getElementById('env-poster');
 
-// Apparition douce du texte 2s apres le chargement
-setTimeout(function() { envHint.classList.add('show'); }, 1500);
+// Apparition douce du texte peu apres le chargement
+setTimeout(function() { envHint.classList.add('show'); }, 300);
 
 function openEnvelope() {
   envOverlay.removeEventListener('click', openEnvelope);
