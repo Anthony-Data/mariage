@@ -1756,7 +1756,8 @@
 // }
 
 // COUNTDOWN
-var wedding = new Date('2027-07-05T15:30:00');
+// Ceremonie a 15h heure du Portugal (UTC+1 en juillet), quel que soit le fuseau de l'invite
+var wedding = new Date('2027-07-05T15:00:00+01:00');
 function updateCountdown() {
   var diff = wedding - new Date();
   if (diff <= 0) {
