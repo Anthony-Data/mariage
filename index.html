@@ -904,6 +904,53 @@
   .wero-qr p { font-size: 0.72rem; color: var(--muted); font-style: italic; }
   @media (min-width: 768px) { .wero-qr { display: block; } }
 
+  /* FAQ : questions qui s'ouvrent au toucher */
+  .faq-list {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .faq-item {
+    background: var(--cream);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none;
+    position: relative;
+    cursor: pointer;
+    padding: 1rem 3rem 1rem 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--brown);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Jost', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--terracotta);
+    transition: transform 0.3s ease;
+  }
+  .faq-item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq-answer {
+    padding: 0 1.2rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+  .faq-answer p + p { margin-top: 0.6rem; }
+  .faq-answer strong { color: var(--text); font-weight: 400; }
+  .faq-answer a { color: var(--terracotta); }
+
   /* RSVP */
   .rsvp-section {
     background: white;
@@ -1293,6 +1340,7 @@
   <a href="#programme">Programme</a>
   <a href="#tenue">Tenue</a>
   <a href="#hebergement">Hôtels</a>
+  <a href="#faq">FAQ</a>
   <a href="#rsvp">RSVP</a>
 </nav>
 
@@ -1602,6 +1650,59 @@
   <button class="carousel-restart" id="hebRestart" aria-label="Revenir au premier hôtel"></button>
   </div>
   <div class="gallery-dots" id="hebDots"></div>
+</section>
+
+<!-- FAQ : ACCES & TRANSPORTS -->
+<section class="section section-alt" id="faq">
+  <p class="section-tag">Questions pratiques</p>
+  <h2 class="section-title">Accès &amp; transports</h2>
+
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>Quel aéroport choisir ?</summary>
+      <div class="faq-answer">
+        <p>L'aéroport le plus proche est celui de <strong>Porto</strong> (Francisco Sá Carneiro, code OPO), desservi depuis de nombreuses villes de France.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>À combien de temps est la Quinta de l'aéroport ?</summary>
+      <div class="faq-answer">
+        <p>La Quinta dos Amores se trouve à <strong>Mouriz, dans la commune de Paredes</strong>, à l'est de Porto. Comptez environ <strong>30 à 40 minutes en voiture</strong> depuis l'aéroport (une quarantaine de kilomètres), selon la circulation.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Uber, Bolt ou taxi ?</summary>
+      <div class="faq-answer">
+        <p>Oui, <strong>Uber et Bolt</strong> fonctionnent à l'aéroport et dans toute la région de Porto, et des taxis attendent devant les arrivées. Le prix s'affiche dans l'application avant de commander.</p>
+        <p>Pour le <strong>retour en fin de soirée</strong>, la Quinta est à la campagne : il peut y avoir peu de chauffeurs disponibles. Pensez à anticiper ou à vous regrouper.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Faut-il louer une voiture ?</summary>
+      <div class="faq-answer">
+        <p>C'est le plus pratique pour être libre de vos déplacements. Les loueurs sont présents à l'aéroport ; en juillet, <strong>réservez tôt</strong>.</p>
+        <p>Bon à savoir : certaines autoroutes portugaises ont un <strong>péage uniquement électronique</strong>. Demandez à l'agence un badge de télépéage (Via Verde). Et pensez à désigner un conducteur pour le retour de la soirée !</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Peut-on venir en train ?</summary>
+      <div class="faq-answer">
+        <p>Si vous logez à Porto, un train relie les gares de Porto (São Bento ou Campanhã) à <strong>Paredes</strong> en une trentaine de minutes (ligne du Douro). Il faut ensuite un taxi ou un Uber pour rejoindre la Quinta. Vérifiez les horaires, surtout pour le retour, sur <a href="https://www.cp.pt" target="_blank" rel="noopener">cp.pt</a>.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Quels papiers et quelle heure sur place ?</summary>
+      <div class="faq-answer">
+        <p>Pour les ressortissants de l'Union européenne, une <strong>carte d'identité ou un passeport</strong> en cours de validité suffit.</p>
+        <p>Le Portugal a <strong>une heure de moins</strong> que la France : quand il est 15h à Paris, il est 14h à Porto.</p>
+      </div>
+    </details>
+  </div>
 </section>
 
 <!-- RSVP -->
