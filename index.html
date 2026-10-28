@@ -1731,8 +1731,9 @@
 // }
 
 // COUNTDOWN
-// Jour J a minuit, heure francaise (UTC+2 en juillet), quel que soit le fuseau de l'invite
-var wedding = new Date('2027-07-05T00:00:00+02:00');
+// Jour J a minuit, a l'heure locale du telephone de l'invite
+// (minuit en France pour un invite en France, minuit au Portugal pour un invite au Portugal...)
+var wedding = new Date(2027, 6, 5, 0, 0, 0);   // les mois commencent a 0 : 6 = juillet
 function updateCountdown() {
   var diff = wedding - new Date();
   if (diff <= 0) {
