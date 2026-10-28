@@ -2073,18 +2073,26 @@ document.getElementById('main-content').style.opacity = '0';
 document.body.style.overflow = 'hidden';
 
 // ===== MUSIQUE =====
-// Les telephones n'autorisent le son qu'apres un geste de l'utilisateur : la musique
-// est donc lancee en silencieux au toucher de l'enveloppe, puis le son est remis
-// quand le site apparait (a la fin de la video).
+// Les telephones n'autorisent le son qu'apres un geste de l'utilisateur.
+// Au toucher de l'enveloppe, on "deverrouille" la musique (lecture aussitot mise
+// en pause, inaudible), puis on la lance vraiment quand le site apparait.
+// (Ne pas passer par muted = true puis false : Safari iPhone met alors la
+// lecture en pause des qu'on remet le son.)
 var music = document.getElementById('bgMusic');
 var musicBtn = document.getElementById('musicToggle');
 var musicStarted = false;
 var musicMutedByUser = false;
 
 function primeMusic() {
-  music.muted = true;
   var p = music.play();
+  music.pause();
   if (p && p.catch) p.catch(function() {});
+}
+
+function setMusicButton(off) {
+  musicMutedByUser = off;
+  musicBtn.classList.toggle('off', off);
+  musicBtn.setAttribute('aria-label', off ? 'Mettre la musique' : 'Couper la musique');
 }
 
 function startMusic() {
@@ -2092,17 +2100,21 @@ function startMusic() {
   musicStarted = true;
   music.currentTime = 0;
   music.muted = false;
-  var p = music.play();
-  if (p && p.catch) p.catch(function() {});
   musicBtn.classList.add('show');
+  var p = music.play();
+  // Si le telephone refuse quand meme, le bouton propose de lancer la musique
+  if (p && p.catch) p.catch(function() { setMusicButton(true); });
 }
 
+// Couper / remettre la musique (pause et reprise, ce qui marche partout, iPhone compris)
 musicBtn.addEventListener('click', function() {
-  musicMutedByUser = !music.muted;
-  music.muted = musicMutedByUser;
-  musicBtn.classList.toggle('off', musicMutedByUser);
-  musicBtn.setAttribute('aria-label', musicMutedByUser ? 'Remettre la musique' : 'Couper la musique');
-  if (!musicMutedByUser && music.paused) music.play().catch(function() {});
+  if (musicMutedByUser || music.paused) {
+    setMusicButton(false);
+    music.play().catch(function() { setMusicButton(true); });
+  } else {
+    setMusicButton(true);
+    music.pause();
+  }
 });
 
 // Fin du morceau ou fichier absent : on retire le bouton
