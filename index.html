@@ -1176,6 +1176,28 @@
   }
   #env-hint.show { opacity: 1; }
 
+  /* Bouton pour couper / remettre la musique (apparait quand elle joue) */
+  .music-toggle {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 150;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(90,69,52,0.25);
+    background: rgba(245,240,232,0.95) center / 20px no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a4534' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5L6 9H3v6h3l5 4z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13'/%3E%3C/svg%3E");
+    box-shadow: 0 2px 10px rgba(90,69,52,0.15);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .music-toggle.show { opacity: 1; pointer-events: auto; }
+  .music-toggle.off {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a4534' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5L6 9H3v6h3l5 4z'/%3E%3Cpath d='M16 9l5 6M21 9l-5 6'/%3E%3C/svg%3E");
+  }
+
   .gallery-arrow { display: none; }
 
   /* Bouton « revenir au debut » : apparait a droite sur le dernier element */
@@ -1313,6 +1335,11 @@
 </style>
 </head>
 <body>
+
+<!-- Musique d'ambiance : lancee apres l'ouverture de l'enveloppe.
+     Fichier attendu : audio/marry-you.mp3 (sans fichier, rien ne s'affiche) -->
+<audio id="bgMusic" src="audio/marry-you.mp3" preload="auto"></audio>
+<button class="music-toggle" id="musicToggle" aria-label="Couper la musique"></button>
 
 <!-- ======= ENVELOPPE D'INVITATION ======= -->
 <div id="env-overlay">
@@ -2045,7 +2072,52 @@ document.getElementById('main-content').style.visibility = 'hidden';
 document.getElementById('main-content').style.opacity = '0';
 document.body.style.overflow = 'hidden';
 
+// ===== MUSIQUE =====
+// Les telephones n'autorisent le son qu'apres un geste de l'utilisateur : la musique
+// est donc lancee en silencieux au toucher de l'enveloppe, puis le son est remis
+// quand le site apparait (a la fin de la video).
+var music = document.getElementById('bgMusic');
+var musicBtn = document.getElementById('musicToggle');
+var musicStarted = false;
+var musicMutedByUser = false;
+
+function primeMusic() {
+  music.muted = true;
+  var p = music.play();
+  if (p && p.catch) p.catch(function() {});
+}
+
+function startMusic() {
+  if (musicStarted || music.error) return;
+  musicStarted = true;
+  music.currentTime = 0;
+  music.muted = false;
+  var p = music.play();
+  if (p && p.catch) p.catch(function() {});
+  musicBtn.classList.add('show');
+}
+
+musicBtn.addEventListener('click', function() {
+  musicMutedByUser = !music.muted;
+  music.muted = musicMutedByUser;
+  musicBtn.classList.toggle('off', musicMutedByUser);
+  musicBtn.setAttribute('aria-label', musicMutedByUser ? 'Remettre la musique' : 'Couper la musique');
+  if (!musicMutedByUser && music.paused) music.play().catch(function() {});
+});
+
+// Fin du morceau ou fichier absent : on retire le bouton
+music.addEventListener('ended', function() { musicBtn.classList.remove('show'); });
+music.addEventListener('error', function() { musicBtn.classList.remove('show'); });
+
+// Pause quand on quitte l'onglet / l'appli, reprise au retour
+document.addEventListener('visibilitychange', function() {
+  if (!musicStarted || music.ended) return;
+  if (document.hidden) music.pause();
+  else if (!musicMutedByUser) music.play().catch(function() {});
+});
+
 function revealSite() {
+  startMusic();
   var overlay = document.getElementById('env-overlay');
   overlay.classList.add('hide');
   // On s'assure d'arriver en haut de page (le body est le conteneur scrollable)
@@ -2076,6 +2148,7 @@ setTimeout(function() { envHint.classList.add('show'); }, 600);
 
 function openEnvelope() {
   envOverlay.removeEventListener('click', openEnvelope);
+  primeMusic();
   // Le texte d'invite s'efface en fondu
   envHint.classList.remove('show');
   envVideo.addEventListener('ended', revealSite);
