@@ -707,15 +707,8 @@
   }
 
   /* Participation au voyage de noces (mention discrete) */
-  .gift-note {
-    padding: 4.5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2rem;
-    text-align: center;
-    background: var(--cream);
-  }
+  /* Meme mise en page que les autres sections (.section), sur fond creme */
+  .gift-note { background: var(--cream); text-align: center; }
   .gift-text {
     max-width: 440px;
     font-family: 'Cormorant Garamond', serif;
@@ -724,11 +717,63 @@
     color: var(--muted);
     line-height: 1.7;
   }
+  .gift-btn {
+    background: none;
+    border: 1px solid rgba(90,69,52,0.3);
+    border-radius: 100px;
+    padding: 0.6rem 1.5rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--brown);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .gift-btn:hover { background: rgba(90,69,52,0.06); }
+
+  /* Fenetre du RIB */
+  #ribModal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(58,46,36,0.55);
+  }
+  #ribModal.open { display: flex; }
+  .modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 1.8rem 1rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(58,46,36,0.3);
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-style: italic;
+    color: var(--brown);
+    margin-bottom: 1.2rem;
+  }
+  .modal-close {
+    position: absolute;
+    top: 10px; right: 14px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
   /* Encadre de l'IBAN avec bouton Copier */
   .pay-group {
     width: 100%;
-    max-width: 380px;
-    margin-top: 0.4rem;
     background: white;
     border: 1px solid rgba(90,69,52,0.12);
     border-radius: 18px;
@@ -770,7 +815,7 @@
   }
   .pay-info .nb { display: block; white-space: nowrap; }
   /* Securite : si un navigateur transforme quand meme le numero en lien */
-  .gift-note .pay-info a { color: inherit; text-decoration: none; }
+  #ribModal .pay-info a { color: inherit; text-decoration: none; }
   .copy-btn {
     flex: none;
     display: inline-flex;
@@ -1561,20 +1606,29 @@
 </section>
 
 <!-- PARTICIPATION AU VOYAGE DE NOCES (mention discrete, a titre informatif) -->
-<section class="gift-note" id="cadeau">
+<section class="section gift-note" id="cadeau">
   <p class="section-tag">Pour ceux qui le souhaitent</p>
   <h2 class="section-title">Participation à notre voyage de noces</h2>
   <p class="gift-text">Pour tous ceux qui nous l'ont demandé, une urne sera présente sur place, et il est aussi possible de participer par virement.</p>
-  <div class="pay-group">
-    <div class="pay-row iban">
-      <span class="pay-avatar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
-      </span>
-      <div class="pay-info"><small>IBAN</small><span><span class="nb">FR76 1027 8060 0600</span> <span class="nb">0212 9600 168</span></span></div>
-      <button class="copy-btn" data-copy="FR7610278060060002129600168"></button>
+  <button class="gift-btn" id="ribOpen">Voir notre RIB</button>
+</section>
+
+<!-- Fenetre du RIB (IBAN a copier) -->
+<div id="ribModal" role="dialog" aria-modal="true" aria-labelledby="ribModalTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="ribModalClose" aria-label="Fermer">×</button>
+    <p class="modal-title" id="ribModalTitle">Notre RIB</p>
+    <div class="pay-group">
+      <div class="pay-row">
+        <span class="pay-avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
+        </span>
+        <div class="pay-info"><small>IBAN</small><span><span class="nb">FR76 1027 8060 0600</span> <span class="nb">0212 9600 168</span></span></div>
+        <button class="copy-btn" data-copy="FR7610278060060002129600168"></button>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- FAQ : ACCES & TRANSPORTS -->
 <section class="section section-alt" id="faq">
@@ -2016,8 +2070,15 @@ function openEnvelope() {
 
 envOverlay.addEventListener('click', openEnvelope);
 
-// ===== IBAN : bouton Copier =====
+// ===== RIB : fenetre et bouton Copier =====
 (function() {
+  var modal = document.getElementById('ribModal');
+  document.getElementById('ribOpen').addEventListener('click', function() { modal.classList.add('open'); });
+  function close() { modal.classList.remove('open'); resetBtns(); }
+  document.getElementById('ribModalClose').addEventListener('click', close);
+  modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+
   var copyBtns = document.querySelectorAll('.copy-btn');
   var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>';
   var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
