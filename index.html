@@ -707,29 +707,45 @@
   }
 
   /* Participation au voyage de noces (mention discrete) */
-  /* Meme mise en page que les autres sections (.section), sur fond creme */
-  .gift-note { background: var(--cream); text-align: center; }
+  /* Meme mise en page que les autres sections (.section), sur une photo de
+     Polynesie francaise avec un voile sombre pour la lisibilite du texte blanc */
+  .gift-note {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    background: #2f5a63 url('images/polynesie.jpg') center / cover no-repeat;
+  }
+  .gift-note::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(20,40,48,0.45), rgba(20,40,48,0.62));
+  }
+  .gift-note > * { position: relative; z-index: 1; }
+  .gift-note .section-tag { color: rgba(255,255,255,0.85); }
+  .gift-note .section-title { color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.3); }
   .gift-text {
     max-width: 440px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.1rem;
     font-style: italic;
-    color: var(--muted);
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
     line-height: 1.7;
   }
   .gift-btn {
     background: none;
-    border: 1px solid rgba(90,69,52,0.3);
+    border: 1px solid rgba(255,255,255,0.7);
     border-radius: 100px;
     padding: 0.6rem 1.5rem;
     font-family: 'Jost', sans-serif;
     font-size: 0.8rem;
     letter-spacing: 0.08em;
-    color: var(--brown);
+    color: #fff;
     cursor: pointer;
     transition: background 0.3s;
   }
-  .gift-btn:hover { background: rgba(90,69,52,0.06); }
+  .gift-btn:hover { background: rgba(255,255,255,0.12); }
 
   /* Fenetre du RIB */
   #ribModal {
@@ -1608,7 +1624,7 @@
 <!-- PARTICIPATION AU VOYAGE DE NOCES (mention discrete, a titre informatif) -->
 <section class="section gift-note" id="cadeau">
   <p class="section-tag">Pour ceux qui le souhaitent</p>
-  <h2 class="section-title">Participation à notre voyage de noces</h2>
+  <h2 class="section-title">Participation à notre voyage</h2>
   <p class="gift-text">Pour tous ceux qui nous l'ont demandé, une urne sera présente sur place, et il est aussi possible de participer par virement.</p>
   <button class="gift-btn" id="ribOpen">Voir notre RIB</button>
 </section>
